@@ -116,6 +116,9 @@ if __name__ == "__main__":
     mlab.barchart(range(16) * 16, get_y(), tmp + 0.01)
     last_time = last_time - 1
 
+    #必须加入show()才能正常显示。。
+    mlab.show()
+
     #     sleep(30)
     # ip_nums_file.close()
 
