@@ -99,7 +99,7 @@ if __name__ == "__main__":
         print "the net work is down...."
         ip_nums_file.write(txt + "the network may be down!")
     # print used_ip
-    tmp = [int(re.search("\d+$", each).group()) for each in used_ip]
+    tmp = sorted([int(re.search("\d+$", each).group()) for each in used_ip])
     print tmp
 
     tmp = np.zeros(16 * 16)
