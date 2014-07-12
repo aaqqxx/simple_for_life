@@ -81,7 +81,7 @@ def res_3d_bar_show(xx, yy, zz):
 if __name__ == "__main__":
     ips = []
     for i in xrange(1, 255):
-        ips.append("119.78.239.%d" % i)
+        ips.append("192.168.14.%d" % i)
     ip_nums_file = open(r'ip_nums_file', 'a')
     last_time = 100
     # while last_time:
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     # fig.show()
 
     mlab.barchart(range(16) * 16, get_y(), tmp + 0.01)
-    last_time = last_time - 1
+    # last_time = last_time - 1
 
     #必须加入show()才能正常显示。。
     mlab.show()
