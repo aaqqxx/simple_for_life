@@ -15,10 +15,11 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
 z_factor = 1
-x_steps = 8
-y_steps = 1
-
+# 数据源为Ophir,EDU,BMU。
 data_source_num = 3
+skiprows = 25
+
+
 
 # def is_reject(data,data_all):
 #
@@ -29,7 +30,7 @@ def reject_outliers(data_all):
     u = np.mean(data_all)
     s = np.std(data_all)
     # filtered = [e for e in data if (u - 2 * s < e < u + 2 * s)]
-    filtered_index = [index for index, e in enumerate(data_all) if (u - 2 * s < e < u + 2 * s)]
+    filtered_index = [index for index, e in enumerate(data_all) if (u - m * s < e < u + m * s)]
     print 'filtere_index', filtered_index
     return filtered_index
 
@@ -48,20 +49,7 @@ class Scanning_param_struct:
 
     def list_all_member(self):
         for name, value in vars(self).items():
-            print('%s = %s' % (name, value))
-
-
-class Z_Scanning_param_struct:
-    def __init__(self):
-        self.Z_scanning_cnt = 11
-        self.Z_scanning_start_position = 0
-        self.Z_scanning_step = 1
-        self.Z_scanning_range = 10
-        self.Sampling_cnt = 100
-
-    def list_all_member(self):
-        for name, value in vars(self).items():
-            print('%s = %s' % (name, value))
+            print('%s=%s' % (name, value))
 
 
 def point_num2list(point_num):
@@ -69,10 +57,7 @@ def point_num2list(point_num):
 
 
 def data_process(data_all, Sampling_cnt=10):
-    # PointData 的list
     res = []
-    # point_data_list=[]
-    # point_data = PointDataStruct()
     print "point_num is", len(data_all) / Sampling_cnt / data_source_num
     data_all = np.array(data_all)
     print 'data_all.shape is', data_all.shape
@@ -145,11 +130,14 @@ class PointDataStruct:
         u = np.mean(data_array)
         s = np.std(data_array)
         for index, each in enumerate(data_array):
-            if not (u - m * s < each < u + m * s):
+            if not (u - 2 * s < each < u + 2 * s):
                 # print "OEB_list_reject_outliers index is ", index
 
                 # Ophir_index.append(index)
                 unusual_index.append(index)
+        # 去除异常数据索引列表中相同的元素。
+        unusual_index = list(set(unusual_index))
+        unusual_index.sort()
         return unusual_index
 
     def OEB_list_reject_outliers(self):
@@ -180,46 +168,29 @@ class PointDataStruct:
         # print raw_Ophir_list
 
         data_list = [raw_Ophir_list, raw_EDU_list, raw_BMU_list]
-        print "raw_Ophir_list is", raw_Ophir_list
-        print "raw_EDU_list is", raw_EDU_list
 
-        # for e in data_list:
-        # 暂不处理BMU的数据。。。。。。
-
-        for e in data_list[0:2]:
+        for e in data_list:
             """
             e分别为Ophir,EDU,BMU的采样点数个数据。
-            """
+          """
             # print "Ophir data is", e
             unusual_index.extend(self.get_unusul_index(e))
 
         unusual_index = list(set(unusual_index))
         unusual_index.sort()
-        # print 'unusual_index is ', unusual_index
 
         if not len(unusual_index) == 0:
             print "unusual_index is ", unusual_index
-
         # print "OVER"
 
         offset = 0
         for unsusul in unusual_index:
-            print 'unsul is', unsusul
+            # print 'unsul is', unsusul
             # del OEB_list[ususul]
             self.OEB_list.pop(unsusul + offset)
             offset = offset - 1
-
-        final_Ophir_list = []
-        final_EDU_list = []
-        final_BMU_list = []
-
-        if not len(self.OEB_list) == scan_param.Sampling_cnt:
+        if not len(self.OEB_list) == 10:
             print "len(OEB_list)", len(self.OEB_list)
-            for each in self.OEB_list:
-                final_Ophir_list.append(each.Ophir)
-                final_EDU_list.append(each.EDU)
-            print len(final_Ophir_list), "final_Ophir_list is", final_Ophir_list
-            print len(final_EDU_list), "final_EDU_list is", final_EDU_list
         return self.OEB_list
 
         # return self.OEB_list
@@ -248,52 +219,22 @@ def get_scan_param(file_name=ur'./ESS_energy_data'):
     return scan_param
 
 
-def get_Z_scan_param(file_name=ur'./Z_scan_data'):
-    fd = open(file_name, 'r')
-    need_line = range(18, 23)
-    data = []
-    for each in range(1, 27):
-        txt = fd.readline()
-        if each in need_line:
-            data.append(int(txt.split()[2]))
-    scan_param = Z_Scanning_param_struct()
-    scan_param.Z_scanning_cnt = data[0]
-    scan_param.Z_scanning_start_position = data[1]
-    scan_param.Z_scanning_step = data[2]
-    scan_param.Z_scanning_range = data[3]
-    scan_param.Sampling_cnt = data[4]
-
-    print "scan param is:\n", scan_param.list_all_member()
-    return scan_param
-
-
-def get_Z_pos(file_name=r'./Z_energy_data'):
-    cols = (3,)
-    Z_pos = np.loadtxt(filename, skiprows=24, usecols=cols, delimiter='\t', unpack=False, comments="_")
-    print "Z_pos is", Z_pos
-    return Z_pos
-
-
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         filename = sys.argv[1]
         print filename
     else:
-        filename = ur'./Z_scan_data'
+        filename = ur'./ESS_energy_data'
 
     # data_dict = {"OEB_list": range(0, data_source_num)}
     # print data_dict["OEB_list"]
 
-    scan_param = get_Z_scan_param(filename)
+    scan_param = get_scan_param(filename)
 
     cols = range(1, scan_param.Sampling_cnt + 1)
     # cols = range(1, 4)
-    # cols = set(cols)
-    # cols = (1,2,3)
-    print "cols is ", cols
-    # cols = [1,]
     # Z_data = np.loadtxt(filename, skiprows=28, usecols=(), delimiter='\t', comments="#")
-    Z_data = np.loadtxt(filename, skiprows=24, usecols=cols, delimiter='\t', unpack=False, comments="T")
+    Z_data = np.loadtxt(filename, skiprows=29, usecols=cols, delimiter='\t', unpack=False, comments="P")
     # print Z_data.shape, len(Z_data), type(Z_data)
     # print Z_data[point_num2list(1)]
     scan_data = data_process(Z_data)
@@ -305,14 +246,36 @@ if __name__ == "__main__":
     # print Z_data[data_dict[0:data_source_num]
     data_for_plot = np.array(data_for_plot)
     # print data_for_plot.shape
-    # data_for_plot = data_for_plot.reshape(11, 3)
+    data_for_plot = data_for_plot.reshape(scan_param.Y_scanning_cnt, scan_param.X_scanning_cnt)
     # print data_for_plot
     # print data_for_plot.shape
-    # X = np.arange(0, data_for_plot.shape[1] * x_steps, x_steps)
-    # Y = np.arange(0, data_for_plot.shape[0] * y_steps, y_steps)
-    X = get_Z_pos(filename)
-    plt.plot(X, data_for_plot, '-*', markersize=14)
-    plt.xlabel("Z (mm)")
-    plt.ylabel("Ophir/EDU")
-    plt.show()
+    # X = np.arange(0, data_for_plot.shape[1] * scan_param.X_scanning_step, scan_param.X_scanning_step)
+    # Y = np.arange(0, data_for_plot.shape[0] * scan_param.Y_scanning_step, scan_param.Y_scanning_step)
+    X = np.linspace(scan_param.X_scanning_start_position,
+                    scan_param.X_scanning_start_position - scan_param.X_scanning_range, scan_param.X_scanning_cnt)
+    Y = np.linspace(scan_param.Y_scanning_start_position,
+                    scan_param.Y_scanning_start_position + scan_param.Y_scanning_range, scan_param.Y_scanning_cnt)
 
+    print "X Y", X, Y
+    X, Y = np.meshgrid(X, Y)
+    # pl = mlab.surf(X, Y, data_for_plot*z_factor, warp_scale="auto")
+    # pl = mlab.surf(X, Y, data_for_plot*z_factor)
+    # s = mlab.mesh(X, Y, data_for_plot*z_factor,  line_width=1.0 )
+    # p = mlab.mesh(X, Y, data_for_plot * z_factor, representation="wireframe", line_width=1.0)
+    # # mlab.axes(xlabel='x', ylabel='y', zlabel='z')
+
+    # mlab.show()
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    ax.plot_wireframe(X, Y, data_for_plot * z_factor)
+    plt.xlabel("x (mm)")
+    plt.ylabel("y (mm)")
+    # ax.set_xlim()
+    # ax.set_ylim()
+
+    #调整视角，使初始视角为我们想要的视角。X向左为正方向，Y向下为正方向。
+    ax.view_init(30, 75)
+    ax.set_zlabel(r"Ophir/EDU")
+
+    plt.show()
