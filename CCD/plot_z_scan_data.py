@@ -10,9 +10,11 @@ __author__ = 'XingHua'
 import numpy as np
 # from mayavi import mlab
 import sys
+from ESS_energy_data_plot import PointDataStruct
 from mpl_toolkits.mplot3d import Axes3D
 # import numpy as np
 import matplotlib.pyplot as plt
+
 
 z_factor = 1
 x_steps = 8
@@ -115,42 +117,6 @@ class Energy_data_struct:
         self.EDU = 0.0
         self.BMU = 0.0
 
-
-class PointDataStruct:
-    """
-    该点的所有信息:坐标，3个能量值，处理之后的OE（Ophir/EDU),采样点数个能量值(一个能量值对应3组数据，Ophir,EDU,BMU)。
-    """
-
-    def __init__(self, OEB_list):
-        self.pos = Pos()
-        self.OE = 0
-        # self.OEB_list = OEB_list  # Energy_data
-        self.OEB_list = OEB_list
-        # print '@@@@@',len(self.OEB_list)
-        # self.OEB_list_reject_outliers(OEB_list)
-        # print "OEB list is ", OEB_list
-        # print "len(OEB_list) IS ",len(OEB_list)
-
-    def data_process(self):
-        self.OE = 0
-        for i in xrange(len(self.OEB_list)):
-            self.OE += self.OEB_list[i].Ophir / self.OEB_list[i].EDU
-        # print 'in data_process OE is',self.OE
-        return self.OE
-
-    def get_unusul_index(self, data_array):
-        # print "Ophir data is", e
-        unusual_index = []
-        m = 2
-        u = np.mean(data_array)
-        s = np.std(data_array)
-        for index, each in enumerate(data_array):
-            if not (u - m * s < each < u + m * s):
-                # print "OEB_list_reject_outliers index is ", index
-
-                # Ophir_index.append(index)
-                unusual_index.append(index)
-        return unusual_index
 
     def OEB_list_reject_outliers(self):
         """

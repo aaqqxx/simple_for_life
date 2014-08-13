@@ -109,12 +109,39 @@ class PointDataStruct:
     def __init__(self, OEB_list):
         self.pos = Pos()
         self.OE = 0
+        self.Ophir_avg = 0
+        self.EDU_avg = 0
+        self.BMU_avg = 0
         # self.OEB_list = OEB_list  # Energy_data
         self.OEB_list = OEB_list
+        self.OEB_list_for_avg = self.OEB_list_reject_outliers()
         # print '@@@@@',len(self.OEB_list)
         # self.OEB_list_reject_outliers(OEB_list)
         # print "OEB list is ", OEB_list
         # print "len(OEB_list) IS ",len(OEB_list)
+        self.get_all_avg()
+
+    def get_all_avg(self):
+        Ophir_list = []
+        EDU_list = []
+        BMU_list = []
+
+        print "OEB_list_for_avg element len is", len(self.OEB_list_for_avg)
+        for each in self.OEB_list_for_avg:
+            Ophir_list.append(each.Ophir)
+            EDU_list.append(each.EDU)
+            BMU_list.append(each.BMU)
+
+        Ophir_list = np.array(Ophir_list)
+        EDU_list = np.array(EDU_list)
+        BMU_list = np.array(BMU_list)
+        self.Ophir_avg = Ophir_list.mean()
+        self.EDU_avg = EDU_list.mean()
+        self.BMU_avg = BMU_list.mean()
+        print "Ophir_avg = ", Ophir_list.mean()
+        print "self.EDU_avg = ", EDU_list.mean()
+        print "self.BMU_avg = ", BMU_list.mean()
+
 
     def data_process(self):
         self.OE = 0
@@ -122,6 +149,7 @@ class PointDataStruct:
             self.OE += self.OEB_list[i].Ophir / self.OEB_list[i].EDU
         # print 'in data_process OE is',self.OE
         return self.OE
+
 
     def get_unusul_index(self, data_array):
         # print "Ophir data is", e
@@ -139,6 +167,7 @@ class PointDataStruct:
         unusual_index = list(set(unusual_index))
         unusual_index.sort()
         return unusual_index
+
 
     def OEB_list_reject_outliers(self):
         """
@@ -240,6 +269,7 @@ if __name__ == "__main__":
     scan_data = data_process(Z_data)
     data_for_plot = []
     for each in scan_data:
+        # data_for_plot.append(each.Ophir_avg)
         data_for_plot.append(each.OE)
     print data_for_plot, len(data_for_plot)
 
@@ -274,7 +304,7 @@ if __name__ == "__main__":
     # ax.set_xlim()
     # ax.set_ylim()
 
-    #调整视角，使初始视角为我们想要的视角。X向左为正方向，Y向下为正方向。
+    # 调整视角，使初始视角为我们想要的视角。X向左为正方向，Y向下为正方向。
     ax.view_init(30, 75)
     ax.set_zlabel(r"Ophir/EDU")
 
