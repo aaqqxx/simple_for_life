@@ -166,7 +166,7 @@ if __name__ == "__main__":
     plt.semilogy(x, data_all["Ks1"], '-*', markersize=14, label="$\eta_s$")
     plt.semilogy(x, data_all["Kp1"], '-*', markersize=14, label="$\eta_p$")
 
-    plt.xlabel("Input angle (degree)")
+    plt.xlabel("Angle of incidence (degree)")
 
     plt.legend()
 

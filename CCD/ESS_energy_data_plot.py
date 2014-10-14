@@ -10,6 +10,10 @@ __author__ = 'XingHua'
 import numpy as np
 # from mayavi import mlab
 import sys
+
+import matplotlib
+matplotlib.use('webagg')
+
 from mpl_toolkits.mplot3d import Axes3D
 # import numpy as np
 import matplotlib.pyplot as plt
@@ -18,6 +22,7 @@ z_factor = 1
 # 数据源为Ophir,EDU,BMU。
 data_source_num = 3
 skiprows = 25
+OEB_list_start_num = 4
 
 
 
@@ -74,7 +79,7 @@ def data_process(data_all, Sampling_cnt=10):
             Energy_data.BMU = BMU[i]
             Energy_data_list.append(Energy_data)
 
-        point_data = PointDataStruct(Energy_data_list)
+        point_data = PointDataStruct(Energy_data_list[OEB_list_start_num:-1])
         point_data.OE = point_data.data_process()
         point_data.OEB_list = point_data.OEB_list_reject_outliers()
         # point_data.pos=0
@@ -281,10 +286,23 @@ if __name__ == "__main__":
     # print data_for_plot.shape
     # X = np.arange(0, data_for_plot.shape[1] * scan_param.X_scanning_step, scan_param.X_scanning_step)
     # Y = np.arange(0, data_for_plot.shape[0] * scan_param.Y_scanning_step, scan_param.Y_scanning_step)
+
+    # data_raw = np.loadtxt(r'e:\IL_data.txt', dtype=float)
+    # data_for_plot = data_raw[:, range(1, 12)]
+
     X = np.linspace(scan_param.X_scanning_start_position,
                     scan_param.X_scanning_start_position - scan_param.X_scanning_range, scan_param.X_scanning_cnt)
     Y = np.linspace(scan_param.Y_scanning_start_position,
                     scan_param.Y_scanning_start_position + scan_param.Y_scanning_range, scan_param.Y_scanning_cnt)
+
+    # Y_profile_for_plot = []
+    # for each in range(data_for_plot.shape[0]):
+    #     Y_profile_for_plot.append(data_for_plot[each, :].mean())
+    # Y_pos =data_raw[:,0]
+    # print "Y_profile_for_plot, Y_pos is :\n", Y_profile_for_plot, Y_pos
+    # print len(Y_profile_for_plot), len(Y_pos)
+    # plt.plot(Y_pos, Y_profile_for_plot)
+    # plt.xlabel("Y avg profile")
 
     print "X Y", X, Y
     X, Y = np.meshgrid(X, Y)

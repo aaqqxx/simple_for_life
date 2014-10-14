@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 z_factor = 1
 x_steps = 8
 y_steps = 1
-
+OEB_list_start_num = 5
 data_source_num = 3
 
 # def is_reject(data,data_all):
@@ -91,7 +91,7 @@ def data_process(data_all, Sampling_cnt=10):
             Energy_data.BMU = BMU[i]
             Energy_data_list.append(Energy_data)
 
-        point_data = PointDataStruct(Energy_data_list)
+        point_data = PointDataStruct(Energy_data_list[OEB_list_start_num:-1])
         point_data.OE = point_data.data_process()
         point_data.OEB_list = point_data.OEB_list_reject_outliers()
         # point_data.pos=0
