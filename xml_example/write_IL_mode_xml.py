@@ -4,11 +4,13 @@
 __author__ = 'XingHua'
 
 """
-
+读取IL_mode.xlsx中的数据，转化为xml格式。
 """
 
 import xlrd
 from xml.dom import minidom
+
+import re
 
 start_row = 1
 
@@ -88,7 +90,7 @@ class IL_mode_struct:
         self.d1 = 100
         self.d2 = 100
         self.d3 = 100
-        self.d4 = 100
+        self.A1 = 100
         self.DOE_mode = "CONVENTIONAL"
         self.sigma_outer = 2
         self.sigma_inner = 2
@@ -119,9 +121,14 @@ def get_info(filename=r"./IL_mode.xlsx"):
     # print table.row_values(0)
 
 
+def zzz(m):
+    return m.group(1) + '\n' + m.group(2).title()
+
+
 if __name__ == "__main__":
     IL_mode_list = get_info()
-    xr = xmlwrite(r'test1.xml')
+    filename = r"IL_mode.xml"
+    xr = xmlwrite(filename)
     # xr.write_Illumination_modes()
 
     for index, each in enumerate(IL_mode_list):
@@ -130,12 +137,24 @@ if __name__ == "__main__":
         xr.write_node('/IL_mode[%s]/' % index, 'd1', str(each.d1))
         xr.write_node('/IL_mode[%s]/' % index, 'd2', str(each.d2))
         xr.write_node('/IL_mode[%s]/' % index, 'd3', str(each.d3))
-        xr.write_node('/IL_mode[%s]/' % index, 'A1', str(each.d4))
+        xr.write_node('/IL_mode[%s]/' % index, 'A1', str(each.A1))
         xr.write_node('/IL_mode[%s]/' % index, 'DOE_mode', str(each.DOE_mode))
         xr.write_node('/IL_mode[%s]/' % index, 'sigma_outer', str(each.sigma_outer))
         xr.write_node('/IL_mode[%s]/' % index, 'sigma_inner', str(each.sigma_inner))
     xr.save_xml()
 
+    a = open(filename, 'r')
+    txt = a.read()
+    # songName = "\d+.?\d?</+\w+>|<\w+>"
+    # pattern = re.compile(r"\d+.?\d?</+\w+(>)|<\w+(>)")
+
+    # songName = "\</+\w+(\>)"
+    # name = re.findall(pattern, txt)
+    print "*" * 50, '\n'
+    b = txt.replace("><", ">\n<")
+    print b
+    c = open(filename, "w")
+    c.write(b)
     # print illumi_mode.illumi_mode
     #
     # # print "<?xml version="1.0" encoding="UTF-8"?>"
@@ -144,11 +163,11 @@ if __name__ == "__main__":
     # for each in IL_mode_list:
     # print "<IL_mode>"
     # print "<illumi_mode>" + each.illumi_mode + "</illumi_mode>"
-    #     print "<d1>"+ str(each.d1)+"</d1>"
-    #     print "<d2>" + str(each.d2) + "</d2>"
-    #     print "<d3>"+str(each.d3) + "</d3>"
-    #     print "<A1>"+str(each.A1) + "</A1>"
-    #     print "<DOE_mode>"+str(each.DOE_mode)+"</DOE_mode>"
+    # print "<d1>"+ str(each.d1)+"</d1>"
+    # print "<d2>" + str(each.d2) + "</d2>"
+    # print "<d3>"+str(each.d3) + "</d3>"
+    # print "<A1>"+str(each.A1) + "</A1>"
+    # print "<DOE_mode>"+str(each.DOE_mode)+"</DOE_mode>"
     #     print "<sigma_outer>"+str(each.sigma_outer)+"</sigma_outer>"
     #     print "<sigma_inner>"+str(each.sigma_inner) + "</sigma_inner>"
     #     print "</IL_mode>"
