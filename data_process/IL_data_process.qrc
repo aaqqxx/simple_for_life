@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="open">
+    <file>contourtest.png</file>
+  </qresource>
+</RCC>
