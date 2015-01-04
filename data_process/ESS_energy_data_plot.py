@@ -117,6 +117,15 @@ class Scanning_params_data_struct:
         self.X_cnt = scanning_params.X_scanning_cnt
         self.Y_cnt = scanning_params.Y_scanning_cnt
         self.Z_cnt = scanning_params.Z_scanning_cnt
+        self.X_start_position = scanning_params.X_scanning_start_position
+        self.Y_start_position = scanning_params.Y_scanning_start_position
+        self.Z_start_position = scanning_params.Z_scanning_start_position
+        self.X_end_position = scanning_params.X_scanning_end_position
+        self.Y_end_position = scanning_params.Y_scanning_end_position
+        self.Z_end_position = scanning_params.Z_scanning_end_position
+        self.X_step = scanning_params.X_scanning_step
+        self.Y_step = scanning_params.Y_scanning_step
+        self.Z_step = scanning_params.Z_scanning_step
         # cols = range(1, int(scanning_params.Sampling_pulses_cnt) + 1)
 
         # Sampling_pulse_cnt= scanning_params.Sampling_pulse_cnt
@@ -124,7 +133,7 @@ class Scanning_params_data_struct:
         data_all = np.loadtxt(filename, skiprows=38, delimiter='\t',
                               usecols=range(0, int(scanning_params.Sampling_pulse_cnt) * 4 + 3), unpack=False,
                               dtype=float)
-        print data_all.shape, data_all[0]
+        # print data_all.shape, data_all[0]
 
         for index, each in enumerate(data_all):
             offset = 0
@@ -160,7 +169,7 @@ class Scanning_params_data_struct:
             # print each, each.pos,
             if Pos[0] == each.pos[0] and Pos[1] == each.pos[1] and Pos[2] == each.pos[2]:
                 # print self.data[0].pos,self.data[0].raw_Ophir
-                print each.raw_Ophir
+                # print each.raw_Ophir
                 return each
             else:
                 # print "pos not right"
@@ -232,7 +241,9 @@ def cmp_data_point_pos(data_point1,data_point2):
     if y1<y2:
         res = -1
     elif y1==y2:
-        res = -cmp(x1,x2)
+        # res = -cmp(x1,x2)
+        # 不要负号代表从小到大排序。
+        res = cmp(x1, x2)
     else:
         res = 1
     return res

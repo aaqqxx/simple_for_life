@@ -1,0 +1,14 @@
+import os
+
+for root, dirs, files in os.walk('.'):
+    for file in files:
+        if file.endswith('.ui'):
+            print 'F:\Anaconda\python.exe F:\Anaconda\Lib\site-packages\PyQt4\uic\pyuic.py -o ui_%s.py %s' % (
+                file.rsplit('.', 1)[0], file)
+            print os.system(
+                r'F:\Anaconda\python.exe F:\Anaconda\Lib\site-packages\PyQt4\uic\pyuic.py -o ui_%s.py %s' % (
+                    file.rsplit('.', 1)[0], file))
+        elif file.endswith('.qrc'):
+            print 'F:\Anaconda\Lib\site-packages\PyQt4\pyrcc4.exe -o %s_rc.py %s' % (file.rsplit('.', 1)[0], file)
+            print os.system(
+                'F:\Anaconda\Lib\site-packages\PyQt4\pyrcc4.exe -o %s_rc.py %s' % (file.rsplit('.', 1)[0], file))
