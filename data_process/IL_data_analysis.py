@@ -215,13 +215,6 @@ class AnimationWidget(QtGui.QWidget):
         labels = ['Pos_' + str(x) + "_" + str(y) + "_" + name for x in X for y in Y for name in
                   ["Ophir", "EDU", "BMU1", "BMU2"]]
         self.line_labels = main_labels[:max(sdata.X_cnt, sdata.Y_cnt)]
-        # visiable_status = []
-        #
-        # for x in X:
-        # for y in Y:
-        # for name in ["Ophir", "EDU", "BMU1", "BMU2"]:
-        # visiable_status.append(False)
-
         self.sdata = sdata
 
 
@@ -243,7 +236,7 @@ class IL_data_process_MainWindow(Ui_MainWindow):
     def __init__(self, parent=None):
         super(IL_data_process_MainWindow, self).__init__()
         self.setupUi(parent)
-        self.mpl_widget = AnimationWidget()
+        # self.mpl_widget = AnimationWidget()
         # self.mpl_widget1 = ESS_3Dplot_Widget(self.widget_5)
         # self.mpl_widget2 = ESS_3Dplot_Widget(self.widget)
         print "before"

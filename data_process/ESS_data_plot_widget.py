@@ -232,8 +232,8 @@ class ESS_data_plot_widget(QtGui.QWidget):
 
         X = np.array(X)
         Y = np.array(Y)
-        print "orgin X", X
-        print "orgin Y", Y
+        # print "orgin X", X
+        # print "orgin Y", Y
 
         raw_Ophir_avg_list = np.array(raw_Ophir_avg_list)
         processed_Ophir_avg_list = np.array(processed_Ophir_avg_list)
@@ -268,9 +268,9 @@ class ESS_data_plot_widget(QtGui.QWidget):
         self.raw_BMU2_avg_list = raw_BMU2_avg_list
         self.raw_OB_avg_list = raw_OB_avg_list
 
-        np.savetxt("Ophir_avg_list.txt", raw_Ophir_avg_list, "%.8f", "\t")
-        np.savetxt("X.txt", X, "%.8f", "\t")
-        np.savetxt("Y.txt", Y, "%.8f", "\t")
+        # np.savetxt("Ophir_avg_list.txt", raw_Ophir_avg_list, "%.8f", "\t")
+        # np.savetxt("X.txt", X, "%.8f", "\t")
+        # np.savetxt("Y.txt", Y, "%.8f", "\t")
 
         # print processed_OE_avg_list[5:],"\n",processed_OE_avg_list,"\n",processed_OE_avg_list.shape
         # print X[5:]
