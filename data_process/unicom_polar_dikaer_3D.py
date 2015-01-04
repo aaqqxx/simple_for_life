@@ -253,7 +253,7 @@ if __name__ == "__main__":
     # print Z.shape
     # for row_index,each in enumerate(Z):
     # xxx=Z[row_index]
-    #     for clmn_index,thing in enumerate(each):
+    # for clmn_index,thing in enumerate(each):
     #     #     data_source = np.ones(500 * 500,dtype=np.int8).reshape(500, 500)
     #     #     tmp.append(get_new_data(clmn,data_source))
     #         # i=i+1
@@ -274,32 +274,32 @@ if __name__ == "__main__":
 
     for data_array in Z:
         for data in data_array:
-            tmp.append(get_new_data1(data))
+            tmp.append(get_new_data(data))
             # print "tmp1=",tmp1
 
 
-    # print Z
-    # txt = ""
-    # for each in tmp:
-    # # for i in each:
-    #     print i,
-    #     txt = txt + str(i) + "\t"
-    # # print "\n",
-    #     txt = txt + "\n"
-    # print txt
-    # save_file = open("res.txt", "w")
-    # save_file.write(txt)
-    # save_file.close()
+            # print Z
+            # txt = ""
+            # for each in tmp:
+            # # for i in each:
+            # print i,
+            #     txt = txt + str(i) + "\t"
+            # # print "\n",
+            #     txt = txt + "\n"
+            # print txt
+            # save_file = open("res.txt", "w")
+            # save_file.write(txt)
+            # save_file.close()
 
 
 
-    # for row in xrange(0, 67 * 67):
-    #     # print tmp[row][0], tmp[row][1], tmp[row][2]
-    #     for row_index in range(0, 3):
-    #         for col_index in range(0, 3):
-    #             txt = txt + str((tmp[row][row_index][col_index])) + "\t"
-    #         txt = txt + "\n"
-        # txt = txt + "\n"
+            # for row in xrange(0, 67 * 67):
+            # # print tmp[row][0], tmp[row][1], tmp[row][2]
+            #     for row_index in range(0, 3):
+            #         for col_index in range(0, 3):
+            #             txt = txt + str((tmp[row][row_index][col_index])) + "\t"
+            #         txt = txt + "\n"
+            # txt = txt + "\n"
 
     # save_file = open("res_tmp.txt", "w")
     # save_file.write(txt)
@@ -328,24 +328,30 @@ if __name__ == "__main__":
 
 
     # tmp = (tmp)
-    min_row_size=500
-    min_col_size=500
-    cnt=0
-    a_res = np.ones(67*min_row_size*67*min_col_size).reshape(67*min_row_size,67*min_col_size)
-    for row in xrange(0,67):
-        for col in xrange(0,67):
-            a_res[row*min_row_size:row*min_row_size+min_row_size,col*min_col_size:col*min_col_size+min_col_size]=tmp[cnt]
-            cnt=cnt+1
+    min_row_size = 3
+    min_col_size = 3
+    cnt = 0
+    a_res = np.ones(67 * min_row_size * 67 * min_col_size).reshape(67 * min_row_size, 67 * min_col_size)
+    for row in xrange(0, 67):
+        for col in xrange(0, 67):
+            a_res[row * min_row_size:row * min_row_size + min_row_size,
+            col * min_col_size:col * min_col_size + min_col_size] = tmp[cnt]
+            cnt = cnt + 1
 
-    for row_index,each in enumerate(a_res):
-        for col_index,each1 in enumerate(each):
-            if each1==1:
-                print "row_index and col_index is",row_index,col_index
+    txt = ""
+    save_file = open("data_3_3.txt", "w")
+    for row_index, each in enumerate(a_res):
+        for col_index, each1 in enumerate(each):
+            if each1 == 0:
+                print "row_index and col_index is", row_index, col_index
+                txt = str(row_index * 0.03) + " " + str(col_index * 0.03) + "\n"
+                save_file.write(txt)
+    save_file.close()
 
-    fig, ax = plt.subplots()
+    # fig, ax = plt.subplots()
     # im=ax.imshow(a_res,cmap=plt.cm.gray)
     # plt.xticks([""])
-    ax.hold(False)
+    # ax.hold(False)
 
     # ax.invert_yaxis()
     # plt.colorbar(im)
@@ -360,8 +366,8 @@ if __name__ == "__main__":
 
 
     # plt.show()
-    img=Image.open("res11.png")
-    xxx=img.convert("1").tobitmap()
+    img = Image.open("res11.png")
+    xxx = img.convert("1").tobitmap()
     # xxx=img.tobitmap()
     img1 = Image.open(StringIO.StringIO(xxx))
     img1.show()
@@ -372,7 +378,7 @@ if __name__ == "__main__":
     # tmp=np.array(tmp)
     # tmp=np.hsplit(tmp,67)
     # tmp=np.array(tmp)
-    res1 = tmp.reshape(67 * 3, 67 * 3)
+    res1 = a_res.reshape(67 * 3, 67 * 3)
 
     print "len of res1 is", len(res1)
     # res1 = np.array(res1).reshape(67*3,67*3)
