@@ -76,7 +76,7 @@ qiangdu_value_dict = {1: [],
 
 
 def get_info(filename):
-    info = np.loadtxt(filename, delimiter=" ", dtype=float, skiprows=1)
+    info = np.loadtxt(filename, delimiter="\t", dtype=float, skiprows=1)
     _min = info[:, 0]
     _max = info[:, 1]
     _value = info[:, 2]
@@ -91,11 +91,12 @@ def init_z_data(x_size=67, y_size=67):
 
 def get_z(x, y, z_data_input, _min, _max, _value):
     res = z_data_input
-    print res.shape
+    # print res.shape
     for x_index in xrange(z_data_input.shape[1]):
         for y_index in xrange(z_data_input.shape[0]):
             for index in range(len(_min)):
-                if _min[index] <= np.sqrt((x_index * 1.5 + x_start_pos) ** 2 + (y_index * 1.5 + y_start_pos) ** 2) < \
+                if _min[index] <= np.sqrt((x_index * 1.5 + x_start_pos + 0.75) ** 2 + (
+                            y_index * 1.5 + y_start_pos + 0.75) ** 2) < \
                         _max[index]:
                     res[y_index, x_index] = _value[index]
                 pass
@@ -125,7 +126,32 @@ def get_new_data1(qiangdu):
     pass
 
 
+def get_qiangdu_dict(filename="LocalCordi.txt"):
+    res_dict = dict()
+    data = np.loadtxt(filename, delimiter="\t", usecols=range(0, 20))
+    for index, each in enumerate(data[0]):
+        res_dict[each] = data[1:, index]
+    res_dict[1] = []
+    return res_dict
+    pass
+
+
+# print "get qiangdu dict",sorted(get_qiangdu_dict().keys())
+
 def get_new_data(qiangdu):
+    res = np.ones(50 * 50, dtype=np.bool)
+    # if qiangdu==1:
+    # # res[res.size/2]=0
+    #     return res.reshape(50,50)
+    qiangdu_dict = get_qiangdu_dict()
+    for each in qiangdu_dict[qiangdu]:
+        if each < 2500:
+            res[each] = 0
+    return res.reshape(50, 50)
+    pass
+
+
+def get_new_data_3(qiangdu):
     res = np.ones(3 * 3, dtype=np.int8).reshape(3, 3)
     if qiangdu == 1:
         res[1][1] = 0
@@ -140,11 +166,23 @@ def get_new_data(qiangdu):
     return res
 
 
-print get_new_data(1)
-print get_new_data(0.92)
-print get_new_data(0.93)
-print get_new_data(0.98)
+# print get_new_data(1)
+# print get_new_data(0.92)
+# print get_new_data(np.float(0.93))
+# print get_new_data(0.98)
+# v=get_new_data(1)
+# v[25][25]=0
+# im=plt.imshow(v,cmap=plt.cm.gray)
+# cbar=plt.colorbar(im,)
+# cbar.set_ticks(np.linspace(0,1,8))
 
+plt.show()
+
+# for each in sorted(get_qiangdu_dict().keys()):
+# im=plt.imshow(get_new_data(each))
+#     plt.title(str(each))
+#     plt.colorbar(im)
+#     plt.show()
 
 def get_shape_array_jiugong(data_array_2D, row, col):
     row_size = data_array_2D.shape[0]
@@ -161,6 +199,10 @@ def get_shape_array_jiugong(data_array_2D, row, col):
 
     res = np.array(res)
     return res
+    pass
+
+
+def get_main_shape():
     pass
 
 
@@ -228,108 +270,28 @@ if __name__ == "__main__":
     plt.ylabel("y")
     plt.show()
 
-    # print Z
-    # txt = ""
-    # for each in Z:
-    # for i in each:
-    # # print i,
-    # txt = txt + str(i) + "\t"
-    # # print "\n",
-    # txt = txt + "\n"
-    # print txt
-    # save_file = open("res.txt", "w")
-    # save_file.write(txt)
-    # save_file.close()
 
-
-    np.savetxt("res1.txt", Z, "%.6f", delimiter="\t")
+    np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
+    print "Z[34,34] IS", Z[34, 34]
 
     im = plt.imshow(Z, cmap=plt.cm.gray)
+    plt.title("67*67_2D")
     plt.colorbar(im)
     plt.show()
 
     tmp = []
     i = 0
-    # print Z.shape
-    # for row_index,each in enumerate(Z):
-    # xxx=Z[row_index]
-    # for clmn_index,thing in enumerate(each):
-    #     #     data_source = np.ones(500 * 500,dtype=np.int8).reshape(500, 500)
-    #     #     tmp.append(get_new_data(clmn,data_source))
-    #         # i=i+1
-    #         # print i
-    #
-    #         xxx=np.vstack(get_new_data(each[clmn_index]))
-    #         # print "xxx is",xxx.shape
-    #     # print "xxx is", xxx.shape
-    #     yyy = np.hstack(xxx)
-    # print yyy.shape
-    # # yyy.reshape()
-    # print "len(tmp) is",len(tmp)
-
-    # Z=Z.reshape(-1)
-    #
-    # for index,each in enumerate(Z.reshape(-1)):
-    #     tmp.append(get_new_data(each))
 
     for data_array in Z:
         for data in data_array:
             tmp.append(get_new_data(data))
-            # print "tmp1=",tmp1
 
+    tmp= np.array(tmp)
+    print "tmp.shape is", tmp.shape
 
-            # print Z
-            # txt = ""
-            # for each in tmp:
-            # # for i in each:
-            # print i,
-            #     txt = txt + str(i) + "\t"
-            # # print "\n",
-            #     txt = txt + "\n"
-            # print txt
-            # save_file = open("res.txt", "w")
-            # save_file.write(txt)
-            # save_file.close()
-
-
-
-            # for row in xrange(0, 67 * 67):
-            # # print tmp[row][0], tmp[row][1], tmp[row][2]
-            #     for row_index in range(0, 3):
-            #         for col_index in range(0, 3):
-            #             txt = txt + str((tmp[row][row_index][col_index])) + "\t"
-            #         txt = txt + "\n"
-            # txt = txt + "\n"
-
-    # save_file = open("res_tmp.txt", "w")
-    # save_file.write(txt)
-    # save_file.close()
-
-    # tmp = np.array(tmp).flatten().reshape(67 * 3, 67 * 3)
-    # np.savetxt("tmp_data.txt", tmp, "%d", delimiter="\t")
-
-    # print tmp.shape
     res1 = []
-    # for row in xrange(0,67):
-    #     for clmn in xrange(0,67):
-    #         for s_row in xrange(0,3):
-    #             for s_clmn in xrange(0,3):
-    #                 res1.append(tmp[row][clmn][s_row][clmn])
-    # res1.append(tmp[row][clmn][s_row][1])
-    # res1.append(tmp[row][clmn][s_row][2])
-
-
-    # tmp = np.array(tmp).tolist()
-    # for each in tmp:
-    #     for each1 in each:
-    #         for each2 in each1:
-    #             res1.append(each2)
-
-
-
-    # tmp = (tmp)
-    min_row_size = 3
-    min_col_size = 3
+    min_row_size = 50
+    min_col_size = 50
     cnt = 0
     a_res = np.ones(67 * min_row_size * 67 * min_col_size).reshape(67 * min_row_size, 67 * min_col_size)
     for row in xrange(0, 67):
@@ -338,20 +300,21 @@ if __name__ == "__main__":
             col * min_col_size:col * min_col_size + min_col_size] = tmp[cnt]
             cnt = cnt + 1
 
-    txt = ""
-    save_file = open("data_3_3.txt", "w")
-    for row_index, each in enumerate(a_res):
-        for col_index, each1 in enumerate(each):
-            if each1 == 0:
-                print "row_index and col_index is", row_index, col_index
-                txt = str(row_index * 0.03) + " " + str(col_index * 0.03) + "\n"
-                save_file.write(txt)
-    save_file.close()
+    # txt = ""
+    # save_file = open("data_50_50.txt", "w")
+    # print "begin save black point pos..."
+    # for row_index, each in enumerate(a_res):
+    # for col_index, each1 in enumerate(each):
+    #         if each1 == 0:
+    #             # print "row_index and col_index is", row_index, col_index
+    #             txt = str(row_index * 0.03) + " " + str(col_index * 0.03) + "\n"
+    #             save_file.write(txt)
+    # print "save black point pos Over"
+    # save_file.close()
 
-    # fig, ax = plt.subplots()
-    # im=ax.imshow(a_res,cmap=plt.cm.gray)
-    # plt.xticks([""])
-    # ax.hold(False)
+    fig, ax = plt.subplots()
+    im = ax.imshow(a_res, cmap=plt.cm.gray)
+
 
     # ax.invert_yaxis()
     # plt.colorbar(im)
@@ -364,8 +327,7 @@ if __name__ == "__main__":
     ax.spines['bottom'].set_visible(False)
     # plt.savefig("res1.svg")
 
-
-    # plt.show()
+    plt.show()
     img = Image.open("res11.png")
     xxx = img.convert("1").tobitmap()
     # xxx=img.tobitmap()
@@ -378,7 +340,7 @@ if __name__ == "__main__":
     # tmp=np.array(tmp)
     # tmp=np.hsplit(tmp,67)
     # tmp=np.array(tmp)
-    res1 = a_res.reshape(67 * 3, 67 * 3)
+    res1 = a_res.reshape(67 * 50, 67 * 50)
 
     print "len of res1 is", len(res1)
     # res1 = np.array(res1).reshape(67*3,67*3)
