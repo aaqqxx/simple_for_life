@@ -96,7 +96,7 @@ def get_z(x, y, z_data_input, _min, _max, _value):
         for y_index in xrange(z_data_input.shape[0]):
             for index in range(len(_min)):
                 if _min[index] <= np.sqrt((x_index * 1.5 + x_start_pos + 0.75) ** 2 + (
-                            y_index * 1.5 + y_start_pos + 0.75) ** 2) < \
+                                    y_index * 1.5 + y_start_pos + 0.75) ** 2) < \
                         _max[index]:
                     res[y_index, x_index] = _value[index]
                 pass
@@ -142,7 +142,7 @@ def get_new_data(qiangdu):
     res = np.ones(50 * 50, dtype=np.bool)
     # if qiangdu==1:
     # # res[res.size/2]=0
-    #     return res.reshape(50,50)
+    # return res.reshape(50,50)
     qiangdu_dict = get_qiangdu_dict()
     for each in qiangdu_dict[qiangdu]:
         if each < 2500:
@@ -180,7 +180,7 @@ plt.show()
 
 # for each in sorted(get_qiangdu_dict().keys()):
 # im=plt.imshow(get_new_data(each))
-#     plt.title(str(each))
+# plt.title(str(each))
 #     plt.colorbar(im)
 #     plt.show()
 
@@ -203,6 +203,17 @@ def get_shape_array_jiugong(data_array_2D, row, col):
 
 
 def get_main_shape():
+    pass
+
+
+def get_sum_at_col(data_2D, col_start_index=67 * 50 / 2 - 50, width=50, height=50, step=50):
+    res = []
+    print "data_2D.shape is", data_2D.shape
+    for row_index in xrange(data_2D.shape[0] / step):
+        print "data_2D area is",data_2D[row_index:row_index + height, col_start_index:col_start_index + width]
+        res.append(data_2D[row_index:row_index + height, col_start_index:col_start_index + width].sum())
+    print res
+    return res
     pass
 
 
@@ -271,8 +282,11 @@ if __name__ == "__main__":
     plt.show()
 
 
-    np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
+    # np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
     print "Z[34,34] IS", Z[34, 34]
+
+    plt.plot(Z[:, Z.shape[1] / 2])
+    plt.show()
 
     im = plt.imshow(Z, cmap=plt.cm.gray)
     plt.title("67*67_2D")
@@ -281,25 +295,26 @@ if __name__ == "__main__":
 
     tmp = []
     i = 0
-
+    print "begin 50*50 replace"
     for data_array in Z:
         for data in data_array:
             tmp.append(get_new_data(data))
 
-    tmp= np.array(tmp)
+    tmp = np.array(tmp)
     print "tmp.shape is", tmp.shape
 
     res1 = []
     min_row_size = 50
     min_col_size = 50
     cnt = 0
+
     a_res = np.ones(67 * min_row_size * 67 * min_col_size).reshape(67 * min_row_size, 67 * min_col_size)
     for row in xrange(0, 67):
         for col in xrange(0, 67):
             a_res[row * min_row_size:row * min_row_size + min_row_size,
             col * min_col_size:col * min_col_size + min_col_size] = tmp[cnt]
             cnt = cnt + 1
-
+    print "50*50 replace over"
     # txt = ""
     # save_file = open("data_50_50.txt", "w")
     # print "begin save black point pos..."
@@ -315,19 +330,24 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     im = ax.imshow(a_res, cmap=plt.cm.gray)
 
-
+    ax.axis("off")
     # ax.invert_yaxis()
     # plt.colorbar(im)
     # plt.legend()
     # ax.spines['left'].set_position(('outward', 1000))
     # ax.spines['bottom'].set_position(('outward', 100))
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.spines['left'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
+    # ax.spines['right'].set_visible(False)
+    # ax.spines['top'].set_visible(False)
+    # ax.spines['left'].set_visible(False)
+    # ax.spines['bottom'].set_visible(False)
     # plt.savefig("res1.svg")
-
     plt.show()
+
+    b_res = get_sum_at_col(a_res, 0)
+    plt.plot(b_res)
+    plt.title("50*50 data sum in middle cols")
+    plt.show()
+
     img = Image.open("res11.png")
     xxx = img.convert("1").tobitmap()
     # xxx=img.tobitmap()
