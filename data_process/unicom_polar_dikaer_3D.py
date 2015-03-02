@@ -92,11 +92,15 @@ def init_z_data(x_size=67, y_size=67):
 def get_z(x, y, z_data_input, _min, _max, _value):
     res = z_data_input
     # print res.shape
+    x_step_size = 1
+    y_step_size = 1
+    x_offset = np.sqrt(x_step_size ** 2 + y_step_size ** 2) / 2
+    y_offset = np.sqrt(x_step_size ** 2 + y_step_size ** 2) / 2
     for x_index in xrange(z_data_input.shape[1]):
         for y_index in xrange(z_data_input.shape[0]):
             for index in range(len(_min)):
-                if _min[index] <= np.sqrt((x_index * 1.5 + x_start_pos + 0.75) ** 2 + (
-                                    y_index * 1.5 + y_start_pos + 0.75) ** 2) < \
+                if _min[index] <= np.sqrt((x_index * x_step_size + x_start_pos + x_offset) ** 2 + (
+                                    y_index * y_step_size + y_start_pos + y_offset) ** 2) < \
                         _max[index]:
                     res[y_index, x_index] = _value[index]
                 pass
@@ -181,8 +185,8 @@ plt.show()
 # for each in sorted(get_qiangdu_dict().keys()):
 # im=plt.imshow(get_new_data(each))
 # plt.title(str(each))
-#     plt.colorbar(im)
-#     plt.show()
+# plt.colorbar(im)
+# plt.show()
 
 def get_shape_array_jiugong(data_array_2D, row, col):
     row_size = data_array_2D.shape[0]
@@ -206,13 +210,14 @@ def get_main_shape():
     pass
 
 
-def get_sum_at_col(data_2D, col_start_index=67 * 50 / 2 - 50, width=50, height=50, step=50):
+def get_sum_at_col(data_2D, col_start_index=67 * 50 / 2, width=50, height=50, step=50):
     res = []
-    print "data_2D.shape is", data_2D.shape
-    for row_index in xrange(data_2D.shape[0] / step):
-        print "data_2D area is",data_2D[row_index:row_index + height, col_start_index:col_start_index + width]
+    # print "data_2D.shape is", data_2D.shape
+    # print "row index start is", np.arange(0, data_2D.shape[0] - height + step, step)
+    for row_index in np.arange(0, data_2D.shape[0] - height + step, step):
+        # print "data_2D area is", data_2D[row_index:row_index + height, col_start_index:col_start_index + width]
         res.append(data_2D[row_index:row_index + height, col_start_index:col_start_index + width].sum())
-    print res
+    # print res
     return res
     pass
 
@@ -230,15 +235,13 @@ get_shape_array_jiugong(data_tmp, 3, 3)
 # #浮点数的精度问题。。。
 # get_new_data(np.round(each*1000)/1000)
 
-# zzz=get_new_data(0.92)
-# print "zzz is ",zzz
-# plt.imshow(get_new_data(0.92),cmap=plt.cm.gray,interpolation='nearest')
+# zzz = get_new_data(0.92)
+# print "zzz is ", zzz
+# plt.imshow(get_new_data(0.92), cmap=plt.cm.gray, interpolation='nearest')
 # plt.show()
 
-
-
-
-
+x_size = 120.
+y_size = 120.
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
@@ -249,17 +252,19 @@ if __name__ == "__main__":
         # filename = ur'/home/aaqqxx/IL/server/data_analysis/data/20141024/ESS_energy_data20141024_PM7_bak'
         filename = ur'data_info.txt'
 
-    x_start_pos = -100.5 / 2
-    x_end_pos = 100.5 / 2
-    x_step = 1.5
+    x_start_pos = -x_size / 2
+    x_end_pos = x_size / 2
+    x_step = 1
 
-    y_start_pos = -100.5 / 2
-    y_end_pos = 100.5 / 2
-    y_step = 1.5
+    y_start_pos = -x_size / 2
+    y_end_pos = x_size / 2
+    y_step = 1
 
     X = get_x(x_start_pos, x_end_pos, x_step)
     Y = get_y(y_start_pos, y_end_pos, y_step)
-    Z = init_z_data()
+    Z = init_z_data(x_size, y_size)
+
+    print "X.shape,Y.shape,Z.shape is ", X.shape, Y.shape, Z.shape
 
     _min, _max, _value = get_info(filename)
     # print _min, "\n", _max, "\n", _value
@@ -281,8 +286,7 @@ if __name__ == "__main__":
     plt.ylabel("y")
     plt.show()
 
-
-    # np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
+    np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
     print "Z[34,34] IS", Z[34, 34]
 
     plt.plot(Z[:, Z.shape[1] / 2])
@@ -320,14 +324,16 @@ if __name__ == "__main__":
     # print "begin save black point pos..."
     # for row_index, each in enumerate(a_res):
     # for col_index, each1 in enumerate(each):
-    #         if each1 == 0:
-    #             # print "row_index and col_index is", row_index, col_index
+    # if each1 == 0:
+    # # print "row_index and col_index is", row_index, col_index
     #             txt = str(row_index * 0.03) + " " + str(col_index * 0.03) + "\n"
     #             save_file.write(txt)
     # print "save black point pos Over"
     # save_file.close()
 
-    fig, ax = plt.subplots()
+    # fig, ax = plt.subplots()
+    fig = plt.Figure(67 * 0.5, 65 * 0.5, dpi=100)
+    ax = fig.add_subplot(111)
     im = ax.imshow(a_res, cmap=plt.cm.gray)
 
     ax.axis("off")
@@ -340,13 +346,25 @@ if __name__ == "__main__":
     # ax.spines['top'].set_visible(False)
     # ax.spines['left'].set_visible(False)
     # ax.spines['bottom'].set_visible(False)
-    # plt.savefig("res1.svg")
+    plt.savefig("res1.tif")
     plt.show()
 
-    b_res = get_sum_at_col(a_res, 0)
-    plt.plot(b_res)
-    plt.title("50*50 data sum in middle cols")
-    plt.show()
+    index = []
+    for row_index in xrange(0, 67 * 50):
+        for col_index in xrange(0, 67 * 50):
+            if a_res[row_index, col_index] == 0:
+                index.append([row_index * 0.03, col_index * 0.03])
+    index = np.array(index)
+    np.savetxt("unicom_top_left_v1.1.txt", index, fmt="%.3f", delimiter="\t")
+    index = index + 0.015
+    np.savetxt("unicom_center_v1.1.txt", index, fmt="%.3f", delimiter="\t")
+
+    for step in np.arange(10, 60, 10):
+        b_res = get_sum_at_col(a_res, col_start_index=67 * 50 / 2, width=50, height=50, step=step)
+        plt.plot(b_res)
+        plt.title("50*50 data sum in middle cols,step=" + str(step))
+        plt.savefig(str(step) + "step_size.tif")
+        plt.show()
 
     img = Image.open("res11.png")
     xxx = img.convert("1").tobitmap()
@@ -364,6 +382,7 @@ if __name__ == "__main__":
 
     print "len of res1 is", len(res1)
     # res1 = np.array(res1).reshape(67*3,67*3)
+
 
     fig, ax = plt.subplots()
 
