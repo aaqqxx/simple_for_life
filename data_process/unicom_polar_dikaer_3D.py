@@ -132,7 +132,8 @@ def get_new_data1(qiangdu):
 
 def get_qiangdu_dict(filename="LocalCordi.txt"):
     res_dict = dict()
-    data = np.loadtxt(filename, delimiter="\t", usecols=range(0, 20))
+    # data = np.loadtxt(filename, delimiter="\t", usecols=range(0, 40))
+    data = np.loadtxt(filename, delimiter="\t")
     for index, each in enumerate(data[0]):
         res_dict[each] = data[1:, index]
     res_dict[1] = []
@@ -142,16 +143,17 @@ def get_qiangdu_dict(filename="LocalCordi.txt"):
 
 # print "get qiangdu dict",sorted(get_qiangdu_dict().keys())
 
-def get_new_data(qiangdu):
-    res = np.ones(50 * 50, dtype=np.bool)
+def get_new_data(qiangdu, x_size=20, y_size=20):
+    res = np.ones(x_size * y_size, dtype=np.bool)
     # if qiangdu==1:
     # # res[res.size/2]=0
     # return res.reshape(50,50)
     qiangdu_dict = get_qiangdu_dict()
+    block_size = x_size * y_size
     for each in qiangdu_dict[qiangdu]:
-        if each < 2500:
+        if each < block_size:
             res[each] = 0
-    return res.reshape(50, 50)
+    return res.reshape(x_size, y_size)
     pass
 
 
@@ -180,7 +182,7 @@ def get_new_data_3(qiangdu):
 # cbar=plt.colorbar(im,)
 # cbar.set_ticks(np.linspace(0,1,8))
 
-plt.show()
+# plt.show()
 
 # for each in sorted(get_qiangdu_dict().keys()):
 # im=plt.imshow(get_new_data(each))
@@ -222,6 +224,81 @@ def get_sum_at_col(data_2D, col_start_index=67 * 50 / 2, width=50, height=50, st
     pass
 
 
+def get_sum_in_circle(data_2D, x_center=60, y_center=30, r=30, mm2index=20):
+    """
+    :param data_2D:
+    :param x_center: mm
+    :param y_center: mm
+    :param r:
+    :param step:
+    :return:
+    """
+    res = []
+    x_center = x_center * mm2index
+    y_center = y_center * mm2index
+    r = r * mm2index
+
+    # print "data_2D.shape is", data_2D.shape
+    # print "row index start is", np.arange(0, data_2D.shape[0] - height + step, step)
+    # for row_index in np.arange(0, data_2D.shape[0] - height + step, step):
+    # print "data_2D area is", data_2D[row_index:row_index + height, col_start_index:col_start_index + width]
+    # res.append(data_2D[row_index:row_index + height, col_start_index:col_start_index + width].sum())
+    # print res
+    print "int get_sum_in_circle, x_center,y_center,r is", x_center, y_center, r
+    row_index_list = []
+    col_index_list = []
+    # for row_index in xrange(0, data_2D.shape[0]):
+    # for col_index in xrange(0, data_2D.shape[1]):
+    # if data_2D.shape[0]/2 - r<=col_index<=data_2D.shape[0]/2 + r:
+    # if (row_index - y_center) ** 2 + (col_index - x_center) ** 2 <= r ** 2:
+    #         res.append(data_2D[row_index][col_index])
+    #         row_index_list.append(row_index)
+    #         col_index_list.append(col_index)
+    # for row_index in xrange(data_2D.shape[0]/2 - r, data_2D.shape[0]/2 + r+1):
+    for row_index in xrange(0, data_2D.shape[0]):
+        for col_index in xrange(data_2D.shape[1] / 2 - r, data_2D.shape[1] / 2 + r + 1):
+            if (row_index - y_center) ** 2 + (col_index - x_center) ** 2 <= r ** 2:
+                res.append(data_2D[row_index][col_index])
+                row_index_list.append(row_index)
+                col_index_list.append(col_index)
+
+    print "get_sum_in_circle"
+    #用来验证该圆是否正确
+    # data_tmp = np.zeros(data_2D.size).reshape(data_2D.shape)
+    # for row, col in zip(row_index_list, col_index_list):
+    #     data_tmp[row][col] = 1
+    # plt.imshow(data_tmp)
+    # plt.show()
+    res = np.array(res)
+    print "circle contain", res.sum(), "white points"
+    return res.sum()
+
+
+get_sum_in_circle(np.zeros(120 * 20 * 120 * 20).reshape(120 * 20, 120 * 20), x_center=60, y_center=30)
+
+
+def get_sum_in_cols_with_circle_shape(data_2D, col_start_pos=60, r=30, step=1, mm2index=20):
+    """
+
+    :param data_2D:
+    :param col_start_pos: mm
+    :param r: mm
+    :param step:mm
+    :param mm2index:mm转换为数组的index
+    :return: 某列处所有圆中所含1的和的列表
+    """
+    res = []
+    # col_start_index = col_start_pos*mm2index
+    # step = step*mm2index
+    # r=r*mm2index
+    print "step is", step
+    for y_center in np.arange(r, 120 - r, step):
+        # print "data_2D area is", data_2D[row_index:row_index + height, col_start_index:col_start_index + width]
+        res.append(get_sum_in_circle(data_2D, x_center=col_start_pos, y_center=y_center, mm2index=mm2index, r=r))
+    res = np.array(res)
+    return res
+
+
 data_tmp = np.arange(0, 81).reshape(9, 9)
 get_shape_array_jiugong(data_tmp, 3, 3)
 
@@ -235,11 +312,12 @@ get_shape_array_jiugong(data_tmp, 3, 3)
 # #浮点数的精度问题。。。
 # get_new_data(np.round(each*1000)/1000)
 
-# zzz = get_new_data(0.92)
+# zzz = get_new_data(0.90,20,20)
 # print "zzz is ", zzz
-# plt.imshow(get_new_data(0.92), cmap=plt.cm.gray, interpolation='nearest')
+# # print [a for each in zzz]
+# plt.imshow(get_new_data(0.90,20,20), cmap=plt.cm.gray, interpolation='nearest')
 # plt.show()
-
+#
 x_size = 120.
 y_size = 120.
 
@@ -286,84 +364,84 @@ if __name__ == "__main__":
     plt.ylabel("y")
     plt.show()
 
-    np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
-    print "Z[34,34] IS", Z[34, 34]
+    # np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
+    print "%d_%d_res.txt" % (X.shape[0], X.shape[1])
+    np.savetxt("%d_%d_res.txt" % (X.shape[0], X.shape[1]), Z, "%.4f", delimiter="\t")
+    # print "Z[34,34] IS", Z[34, 34]
 
     plt.plot(Z[:, Z.shape[1] / 2])
     plt.show()
 
     im = plt.imshow(Z, cmap=plt.cm.gray)
-    plt.title("67*67_2D")
+    plt.title("%d*%d_2D" % (X.shape[0], X.shape[1]))
     plt.colorbar(im)
     plt.show()
 
     tmp = []
     i = 0
-    print "begin 50*50 replace"
-    for data_array in Z:
-        for data in data_array:
-            tmp.append(get_new_data(data))
+    # print "begin 50*50 replace"
+
+    min_row_size = 20
+    min_col_size = 20
+
+    print "begin 20*20 replace"
+    # for data_array in Z:
+    # for data in data_array:
+    # tmp.append(get_new_data(data, min_row_size, min_col_size))
+
+    for each in Z.flatten():
+        tmp.append(get_new_data(each, min_row_size, min_col_size))
 
     tmp = np.array(tmp)
     print "tmp.shape is", tmp.shape
 
     res1 = []
-    min_row_size = 50
-    min_col_size = 50
     cnt = 0
-
-    a_res = np.ones(67 * min_row_size * 67 * min_col_size).reshape(67 * min_row_size, 67 * min_col_size)
-    for row in xrange(0, 67):
-        for col in xrange(0, 67):
+    a_res = np.ones(X.shape[0] * min_row_size * X.shape[1] * min_col_size).reshape(X.shape[0] * min_row_size,
+                                                                                   X.shape[1] * min_col_size)
+    print "X.shape is ", X.shape
+    for row in xrange(0, X.shape[0]):
+        for col in xrange(0, X.shape[1]):
             a_res[row * min_row_size:row * min_row_size + min_row_size,
             col * min_col_size:col * min_col_size + min_col_size] = tmp[cnt]
             cnt = cnt + 1
-    print "50*50 replace over"
-    # txt = ""
-    # save_file = open("data_50_50.txt", "w")
-    # print "begin save black point pos..."
-    # for row_index, each in enumerate(a_res):
-    # for col_index, each1 in enumerate(each):
-    # if each1 == 0:
-    # # print "row_index and col_index is", row_index, col_index
-    #             txt = str(row_index * 0.03) + " " + str(col_index * 0.03) + "\n"
-    #             save_file.write(txt)
-    # print "save black point pos Over"
-    # save_file.close()
+    # print "50*50 replace over"
+    print "20*20 replace over"
 
-    # fig, ax = plt.subplots()
-    fig = plt.Figure(67 * 0.5, 65 * 0.5, dpi=100)
-    ax = fig.add_subplot(111)
+
+    # fig = plt.Figure(X.shape[0] * 0.5, X.shape[1] * 0.5, dpi=100)
+    # fig = plt.Figure()
+    # ax = fig.add_subplot(111)
+    fig, ax = plt.subplots()
     im = ax.imshow(a_res, cmap=plt.cm.gray)
-
+    plt.colorbar(im)
+    print "a_res.shape is ", a_res.shape
+    np.savetxt("final.txt", a_res, fmt="%.4f", delimiter="\t")
     ax.axis("off")
-    # ax.invert_yaxis()
-    # plt.colorbar(im)
-    # plt.legend()
-    # ax.spines['left'].set_position(('outward', 1000))
-    # ax.spines['bottom'].set_position(('outward', 100))
-    # ax.spines['right'].set_visible(False)
-    # ax.spines['top'].set_visible(False)
-    # ax.spines['left'].set_visible(False)
-    # ax.spines['bottom'].set_visible(False)
     plt.savefig("res1.tif")
+    plt.savefig("res1.png")
     plt.show()
 
     index = []
-    for row_index in xrange(0, 67 * 50):
-        for col_index in xrange(0, 67 * 50):
+
+    index2mm = 0.05
+    mm2index = 20
+    for row_index in xrange(0, X.shape[0] * min_row_size):
+        for col_index in xrange(0, X.shape[1] * min_row_size):
             if a_res[row_index, col_index] == 0:
-                index.append([row_index * 0.03, col_index * 0.03])
+                index.append([row_index * index2mm, col_index * index2mm])
     index = np.array(index)
     np.savetxt("unicom_top_left_v1.1.txt", index, fmt="%.3f", delimiter="\t")
-    index = index + 0.015
+    index += index2mm / 2
     np.savetxt("unicom_center_v1.1.txt", index, fmt="%.3f", delimiter="\t")
 
-    for step in np.arange(10, 60, 10):
-        b_res = get_sum_at_col(a_res, col_start_index=67 * 50 / 2, width=50, height=50, step=step)
+    for r in xrange(30, 50, 10):
+        # b_res = get_sum_at_col(a_res, col_start_index=67 * 50 / 2, width=50, height=50, step=step)
+        b_res = get_sum_in_cols_with_circle_shape(a_res, col_start_pos=a_res.shape[0] * index2mm / 2, r=r,
+                                                  step=1)
         plt.plot(b_res)
-        plt.title("50*50 data sum in middle cols,step=" + str(step))
-        plt.savefig(str(step) + "step_size.tif")
+        plt.title("50*50 data sum in middle cols,step=" + str(1))
+        plt.savefig(str(1) + "step_size.tif")
         plt.show()
 
     img = Image.open("res11.png")
@@ -371,14 +449,8 @@ if __name__ == "__main__":
     # xxx=img.tobitmap()
     img1 = Image.open(StringIO.StringIO(xxx))
     img1.show()
-    # img.show()
 
-    #
-    # tmp=np.hsplit(tmp,67)
-    # tmp=np.array(tmp)
-    # tmp=np.hsplit(tmp,67)
-    # tmp=np.array(tmp)
-    res1 = a_res.reshape(67 * 50, 67 * 50)
+    res1 = a_res.reshape(x_size * min_col_size, x_size * min_row_size)
 
     print "len of res1 is", len(res1)
     # res1 = np.array(res1).reshape(67*3,67*3)
@@ -391,6 +463,7 @@ if __name__ == "__main__":
     print "res1 shape is", res1.shape
     # plt.savefig("qiangdu.png")
     plt.colorbar(im)
+    plt.title("res1_final")
     plt.show()
     # np.savetxt("tmp.txt",tmp,"%.6f",delimiter="\t")
 
