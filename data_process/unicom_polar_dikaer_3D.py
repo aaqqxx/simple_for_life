@@ -299,8 +299,8 @@ def get_sum_in_cols_with_circle_shape(data_2D, col_start_pos=60, r=30, step=1, m
     return res
 
 
-data_tmp = np.arange(0, 81).reshape(9, 9)
-get_shape_array_jiugong(data_tmp, 3, 3)
+# data_tmp = np.arange(0, 81).reshape(9, 9)
+# get_shape_array_jiugong(data_tmp, 3, 3)
 
 
 
@@ -320,6 +320,42 @@ get_shape_array_jiugong(data_tmp, 3, 3)
 #
 x_size = 120.
 y_size = 120.
+
+
+# fig = plt.Figure(120/25.4, 120/25.4, 25.4*20)
+# fig = plt.Figure(figsize=(10,6), dpi=80)
+# # fig = plt.Figure()
+# ax = plt.subplot(111)
+# # fig, ax = plt.subplots()
+# a_res=np.ones(100).reshape(10,10)
+# im = ax.imshow(a_res, cmap=plt.cm.gray)
+# print "zzz"
+# # fig.show()
+# plt.show()
+
+def out_put_photo(filename, data):
+    # save_path=""
+    # mpl.rcParams['figure.subplot.left'] = 0
+    # mpl.rcParams['figure.subplot.right'] = 1
+    # mpl.rcParams['figure.subplot.bottom'] = 0
+    # mpl.rcParams['figure.subplot.top'] = 1
+    # # mpl.rcParams['figure.subplot.wspace'] = 0
+    # # mpl.rcParams['figure.subplot.hspace'] = 0
+    # fig, ax = plt.subplots(figsize=(data.shape[0], data.shape[1]), dpi=100)
+    # ax.imshow(data, plt.cm.gray)
+    # ax.spines['right'].set_visible(False)
+    # ax.spines['top'].set_visible(False)
+    # ax.spines['left'].set_visible(False)
+    # ax.spines['bottom'].set_visible(False)
+    # ax.xaxis.set_major_locator(plt.NullLocator())
+    # ax.yaxis.set_major_locator(plt.NullLocator())
+    # fig.savefig(filename)
+
+    im = Image.new('L', (data.shape[0], data.shape[1]))
+    im.putdata(np.floor(data * 255).astype('uint8').ravel())
+    im.save(filename[:-4] + ".bmp")
+    print filename[:-4] + ".bmp"
+    pass
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
@@ -372,6 +408,13 @@ if __name__ == "__main__":
     plt.plot(Z[:, Z.shape[1] / 2])
     plt.show()
 
+    res_mid_fit = []
+    data_for_mid_fit = Z[:, Z.shape[1] / 2]
+    for each in xrange(0, 120 - 60, 1):
+        res_mid_fit.append(data_for_mid_fit[each:each + 60].sum() / 60)
+    plt.plot(res_mid_fit)
+    plt.show()
+
     im = plt.imshow(Z, cmap=plt.cm.gray)
     plt.title("%d*%d_2D" % (X.shape[0], X.shape[1]))
     plt.colorbar(im)
@@ -408,19 +451,22 @@ if __name__ == "__main__":
     # print "50*50 replace over"
     print "20*20 replace over"
 
-
-    # fig = plt.Figure(X.shape[0] * 0.5, X.shape[1] * 0.5, dpi=100)
+    fig = plt.Figure(figsize=(120 / 25.4, 120 / 25.4), dpi=25.4 * 20)
     # fig = plt.Figure()
-    # ax = fig.add_subplot(111)
-    fig, ax = plt.subplots()
+    ax = plt.subplot(111)
+    # fig, ax = plt.subplots()
     im = ax.imshow(a_res, cmap=plt.cm.gray)
-    plt.colorbar(im)
+    # plt.colorbar(im)
     print "a_res.shape is ", a_res.shape
     np.savetxt("final.txt", a_res, fmt="%.4f", delimiter="\t")
     ax.axis("off")
     plt.savefig("res1.tif")
     plt.savefig("res1.png")
+    # plt.savefig("res1.pdf")
     plt.show()
+
+    out_put_photo("unicom_res.tif", a_res)
+
 
     index = []
 
@@ -439,8 +485,8 @@ if __name__ == "__main__":
         # b_res = get_sum_at_col(a_res, col_start_index=67 * 50 / 2, width=50, height=50, step=step)
         b_res = get_sum_in_cols_with_circle_shape(a_res, col_start_pos=a_res.shape[0] * index2mm / 2, r=r,
                                                   step=1)
-        plt.plot(b_res)
-        plt.title("50*50 data sum in middle cols,step=" + str(1))
+        plt.plot(b_res / (np.pi * r ** 2 * 20 * 20))
+        plt.title("20*20 data sum in middle cols,step=" + str(1))
         plt.savefig(str(1) + "step_size.tif")
         plt.show()
 

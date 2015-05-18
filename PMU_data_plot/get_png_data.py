@@ -34,10 +34,10 @@ if __name__ == "__main__":
         file_name = sys.argv[1]
         print file_name
     else:
-        file_name = r'./test1.png'
+        file_name = r'20141125_104452_x65_y23_No1.png'
 
     data = get_data_from_png(file_name)
-    print data[:10]
+    print data[:512]
 
     # datafile = cbook.get_sample_data(file_name, asfileobj=False)
     # print ('loading %s' % datafile[:])

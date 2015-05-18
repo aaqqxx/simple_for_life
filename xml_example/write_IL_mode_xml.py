@@ -9,6 +9,7 @@ __author__ = 'XingHua'
 
 import xlrd
 from xml.dom import minidom
+from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup
 
 import re
 
@@ -151,10 +152,15 @@ if __name__ == "__main__":
     # songName = "\</+\w+(\>)"
     # name = re.findall(pattern, txt)
     print "*" * 50, '\n'
-    b = txt.replace("><", ">\n<")
-    print b
-    c = open(filename, "w")
-    c.write(b)
+
+    soup = BeautifulStoneSoup(txt)
+    print soup
+
+
+    # b = txt.replace("><", ">\n<")
+    # print b
+    # c = open(filename, "w")
+    # c.write(b)
     # print illumi_mode.illumi_mode
     #
     # # print "<?xml version="1.0" encoding="UTF-8"?>"
