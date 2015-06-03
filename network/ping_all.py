@@ -1,5 +1,5 @@
 # coding:utf-8
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 '''
 用来检测同一网段的IP，mac地址
@@ -15,7 +15,7 @@ import matplotlib
 # matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-from mayavi import mlab
+# from mayavi import mlab
 
 import numpy as np
 import re
@@ -78,6 +78,13 @@ def res_3d_bar_show(xx, yy, zz):
     fig.show()
 
 
+def get_text_pos(data_2D):
+    x = data_2D % 16
+    y = data_2D / 16
+    return x, y
+    pass
+
+
 if __name__ == "__main__":
     ips = []
     for i in xrange(1, 255):
@@ -103,8 +110,10 @@ if __name__ == "__main__":
     print tmp
 
     tmp = np.zeros(16 * 16)
+    txt_pos = []
     for each in get_ip_last_num(used_ip):
         tmp[each] = 1
+        txt_pos.append(get_text_pos(each))
     # fig = plt.figure()
     # ax = fig.add_subplot(111, projection='3d')
 
@@ -112,20 +121,26 @@ if __name__ == "__main__":
     # ax.bar3d(range(16)*16, get_y(), np.zeros(16*16), 1, 1, tmp, 'b', alpha=0.8)
     #
     # fig.show()
+    plt.imshow(tmp.reshape(16, 16), interpolation='nearest')
+    for each in txt_pos:
+        plt.text(each[0] - 0.25, each[1] + 0.15, each[0] + each[1] * 16)
+    plt.show()
 
-    mlab.barchart(range(16) * 16, get_y(), tmp + 0.01)
+    # mlab.barchart(range(16) * 16, get_y(), tmp + 0.01)
+    # plt.bar(range(16) * 16, get_y(), tmp + 0.01)
+    # plt.show()
     # last_time = last_time - 1
 
-    #必须加入show()才能正常显示。。
-    mlab.show()
+    # 必须加入show()才能正常显示。。
+    # mlab.show()
 
     #     sleep(30)
     # ip_nums_file.close()
 
     # while (1):
-    # g = IP2MAC()
-    # for each in used_ip:
-    # print each, g.getMac(each)
+    g = IP2MAC()
+    for each in used_ip:
+        print each, g.getMac(each)
 
     # # used_ip.sort()
     # for each in used_ip:
