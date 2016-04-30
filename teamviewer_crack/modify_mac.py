@@ -1,105 +1,120 @@
-# -*- coding: utf-8 -*-
+# -*- coding: gbk -*-
 '''
-MACåœ°å€ä¿®æ”¹å™¨for xp V1.0
-å°äº”ä¹‰ï¼šhttp://www.cnblogs.com/xiaowuyi
+MACµØÖ·ĞŞ¸ÄÆ÷for xp V1.0
+Ğ¡ÎåÒå£ºhttp://www.cnblogs.com/xiaowuyi
 '''
 
 from _winreg import *
 import sys
 import os
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-mackey="SYSTEM\\CurrentControlSet\\Control\\Class\\{4D36E972-E325-11CE-BFC1-08002bE10318}"
+import locale
+import codecs
 
 
+mackey = "SYSTEM\\CurrentControlSet\\Control\\Class\\{4D36E972-E325-11CE-BFC1-08002bE10318}"
 
 
-def readinfo(ethernetname):#è¯»å–å½“å‰ç½‘ç»œè®¾å¤‡å¹¶é€‰æ‹©è¦ä¿®æ”¹çš„è®¾å¤‡
+def readinfo(ethernetname):  # ¶ÁÈ¡µ±Ç°ÍøÂçÉè±¸²¢Ñ¡ÔñÒªĞŞ¸ÄµÄÉè±¸
 
-    key=OpenKey(HKEY_LOCAL_MACHINE, mackey)
-    countkey=QueryInfoKey(key)[0]
-    keylist=[]#è·å–{4D36E972-E325-11CE-BFC1-08002bE10318}å­é”®åˆ—è¡¨
-    mackeylist=[]
+    key = OpenKey(HKEY_LOCAL_MACHINE, mackey)
+    countkey = QueryInfoKey(key)[0]
+    keylist = []  # »ñÈ¡{4D36E972-E325-11CE-BFC1-08002bE10318}×Ó¼üÁĞ±í
+    mackeylist = []
 
     for i in range(int(countkey)):
-        name=EnumKey(key,i) #è·å–å­é”®å
+        name = EnumKey(key, i)  # »ñÈ¡×Ó¼üÃû
         keylist.append(name)
     CloseKey(key)
 
     for t in keylist:
-        mackey_zi=mackey+'\\'+t
+        # print "t is ",t
+        mackey_zi = mackey + '\\' + t
 
         try:
-            key=OpenKey(HKEY_LOCAL_MACHINE, mackey_zi)
-        #print key
-            value,type=QueryValueEx(key,"DriverDesc")
-            #åˆ—å‡ºæœ‰macåœ°å€çš„ç½‘å¡ï¼ŒåŠå¯¹åº”æ³¨å†Œè¡¨ä¸­çš„ç¼–å·
-            if ethernetname.has_key(value):
+            key = OpenKey(HKEY_LOCAL_MACHINE, mackey_zi)
+            # print key
+            value, type = QueryValueEx(key, "DriverDesc")
+            # ÁĞ³öÓĞmacµØÖ·µÄÍø¿¨£¬¼°¶ÔÓ¦×¢²á±íÖĞµÄ±àºÅ
+            print value
+            if ethernetname.has_key(value.decode("gbk")):
                 mackeylist.append(t)
-                print '%s: %s  MAC:%s' %(t,value,ethernetname[value])
+                print '%s: %s  MAC:%s' % (t, value, ethernetname[value])
             else:
                 pass
         except:
-            value='None'
+            value = 'None'
     CloseKey(key)
-    judge=True
+    judge = True
     while judge:
-        d=raw_input('è¯·ä»ä¸Šé¢é€‰æ‹©æ‚¨çš„ç½‘å¡å·ï¼ˆæ³¨æ„æŒ‰æ ¼å¼å¡«å†™æ¯è¡Œå†’å·å‰çš„æ•°å­—ï¼‰:')
+        d = raw_input(u'Çë´ÓÉÏÃæÑ¡ÔñÄúµÄÍø¿¨ºÅ£¨×¢Òâ°´¸ñÊ½ÌîĞ´Ã¿ĞĞÃ°ºÅÇ°µÄÊı×Ö£©:')
+        print "you input is:",d
         if d in mackeylist:
-            judge=False
+            judge = False
         else:
-            print "è¾“å…¥é”™è¯¯ï¼Œé‡æ–°è¾“å…¥ï¼"
+            print u"ÊäÈë´íÎó£¬ÖØĞÂÊäÈë£¡"
     return d
 
-def readipconfig():#è¯»å–ipconfigä¿¡æ¯ï¼Œåˆ—å‡ºå½“å‰ç½‘å¡åœ°å€
-    t="Physical Address"
-    t=u"ç‰©ç†åœ°å€"
-    u="Description"
-    u=u"æè¿°"
-    keyphy=''
-    macfact={}
-    print os.popen("ipconfig /all")
-    for line in os.popen("ipconfig /all"):
-        print line
-        # if u in line:
-        #     keyphy=line.split(":")[1].strip()
-        # if keyphy !='' and (t in line):
-        #     macfact[keyphy]=line.split(":")[1].strip()
 
+def readipconfig():  # ¶ÁÈ¡ipconfigĞÅÏ¢£¬ÁĞ³öµ±Ç°Íø¿¨µØÖ·
+    t = "Physical Address"
+    t = u"ÎïÀíµØÖ·"
+    u = "Description"
+    u = u"ÃèÊö"
+    keyphy = ''
+    macfact = {}
+    print os.popen("ipconfig /all").readlines()
+    for line in os.popen("ipconfig /all"):
+        # print line,
+        if u.encode(codecs.lookup(locale.getpreferredencoding()).name) in line:
+            print keyphy
+            keyphy=line.split(":")[1].strip()
+        if keyphy !='' and (t.encode(codecs.lookup(locale.getpreferredencoding()).name) in line):
+            macfact[keyphy]=line.split(":")[1].strip()
+    # for key in macfact.keys():
+    #     print key,macfact[key]
     return macfact
 
 
-def modifymac(newmac):#ä¿®æ”¹macåœ°å€
-    mackey_fix=mackey+'\\'+newmac
-    key=OpenKey(HKEY_LOCAL_MACHINE, mackey_fix,0,KEY_ALL_ACCESS)
+def modifymac(newmac):  # ĞŞ¸ÄmacµØÖ·
+    mackey_fix = mackey + '\\' + newmac
+    key = OpenKey(HKEY_LOCAL_MACHINE, mackey_fix, 0, KEY_ALL_ACCESS)
 
-    judge=True
+    judge = True
     while judge:
-        inputmac=raw_input('è¯·è¾“å…¥ä¿®æ”¹åçš„MACåœ°å€ï¼šï¼ˆå¦‚â€œ011D00003F21â€ï¼‰:')
-        mjudge=judgemac(inputmac)
-        if len(inputmac)==12 and  mjudge==True:
-            judge=False
-    print 'æ‚¨è¾“å…¥çš„æ–°MACåœ°å€æ˜¯%s' %inputmac
-    SetValueEx(key,"NetworkAddress",0,REG_SZ,inputmac)#è®¾ç½®æ³¨å†Œè¡¨å€¼
-    print 'MACåœ°å€å·²ä¿®æ”¹æˆåŠŸ,é‡å¯åç”Ÿæ•ˆã€‚'
+        inputmac = raw_input('ÇëÊäÈëĞŞ¸ÄºóµÄMACµØÖ·£º£¨Èç¡°011D00003F21¡±£©:')
+        mjudge = judgemac(inputmac)
+        if len(inputmac) == 12 and mjudge == True:
+            judge = False
+    print 'ÄúÊäÈëµÄĞÂMACµØÖ·ÊÇ%s' % inputmac
+    SetValueEx(key, "NetworkAddress", 0, REG_SZ, inputmac)  # ÉèÖÃ×¢²á±íÖµ
+    print 'MACµØÖ·ÒÑĞŞ¸Ä³É¹¦,ÖØÆôºóÉúĞ§¡£'
     CloseKey(key)
 
-def judgemac(inputmac):#åˆ¤æ–­è¾“å…¥çš„macåœ°å€æ˜¯å¦åˆæ³•
-    judgechar=True
-    charlist=['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','a','b','c','d','e','f']
+
+def judgemac(inputmac):  # ÅĞ¶ÏÊäÈëµÄmacµØÖ·ÊÇ·ñºÏ·¨
+    judgechar = True
+    charlist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e',
+                'f']
     for char_i in inputmac:
         if char_i not in charlist:
-            print 'MACåœ°å€æ ¼å¼é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ã€‚'
-            judgechar=False
+            print 'MACµØÖ·¸ñÊ½´íÎó£¬ÇëÖØĞÂÊäÈë¡£'
+            judgechar = False
             break
     return judgechar
 
-if __name__=='__main__':
 
-    if sys.platform=="win32":
-        iplist=readipconfig()
+if __name__ == '__main__':
+    # print sys.getdefaultencoding()
+    # print sys.getfilesystemencoding()
+    # import locale
+    # import codecs
+    # #
+    # print locale.getpreferredencoding();
+    # print codecs.lookup(locale.getpreferredencoding()).name
+    if sys.platform == "win32":
+        iplist = readipconfig()
         m=readinfo(iplist)
         modifymac(m)
+        pass
     else:
-        print "ä¸æ”¯æŒå½“å‰ç³»ç»Ÿ"
+        print "²»Ö§³Öµ±Ç°ÏµÍ³"
