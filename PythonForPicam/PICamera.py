@@ -109,7 +109,7 @@ class PICamera():
     def acquire(self):
         readoutstride = piint(0)
         readout_count = pi64s(1)
-        readout_time_out = piint(-1)
+        readout_time_out = piint(10000)
         available = PicamAvailableData()
         errors = PicamAcquisitionErrorsMask()
 
@@ -135,70 +135,64 @@ class PICamera():
             #tmp1.dtype=np.uint16
             print type(tmp1[0][0]),tmp1[0][0]
             print tmp1.shape,tmp1
-
-
-
             #tmp1=np.asarray(tmp1)
-
-
             #tmp1=np.arange(0,1024*1024,1).reshape(1024,1024)
-
             # im=Image.fromarray(tmp1)
             #im.show()
             # im.save("test.png")
             # data_array=[]
             # for each in tmp.contents:
             #    data_array.append(int(each))
-
             # data_array=
-
 
             print "Initial readout type is", type(available.initial_readout)
             return available
         else:
-            print "Error: Camera only collected ", available.readout_count()
+            print "Error: Camera only collected ", available.readout_count
             return None
         pass
 
     def acquire_to_save(self):
         available = self.acquire()
-        """ Test Routine to Access Data """
 
-        """ Create an array type to hold 1024x1024 16bit integers """
-        DataArrayType = pi16u * 1048576
+        if (available!=None):
+            """ Test Routine to Access Data """
 
-        """ Create pointer type for the above array type """
-        DataArrayPointerType = ctypes.POINTER(pi16u * 1048576)
+            """ Create an array type to hold 1024x1024 16bit integers """
+            DataArrayType = pi16u * 1048576
 
-        """ Create an instance of the pointer type, and point it to initial readout contents (memory address?) """
-        DataPointer = ctypes.cast(available.initial_readout, DataArrayPointerType)
+            """ Create pointer type for the above array type """
+            DataArrayPointerType = ctypes.POINTER(pi16u * 1048576)
 
-        """ Create a separate array with readout contents """
-        data = DataPointer.contents
+            """ Create an instance of the pointer type, and point it to initial readout contents (memory address?) """
+            DataPointer = ctypes.cast(available.initial_readout, DataArrayPointerType)
 
-        """ Write contents of Data to binary file"""
-        libc = ctypes.cdll.msvcrt
-        fopen = libc.fopen
-        fopen.argtypes = ctypes.c_char_p, ctypes.c_char_p
-        fopen.restype = ctypes.c_void_p
+            """ Create a separate array with readout contents """
+            data = DataPointer.contents
 
-        fwrite = libc.fwrite
-        fwrite.argtypes = ctypes.c_void_p, ctypes.c_size_t, ctypes.c_size_t, ctypes.c_void_p
-        fwrite.restype = ctypes.c_size_t
+            """ Write contents of Data to binary file"""
+            libc = ctypes.cdll.msvcrt
+            fopen = libc.fopen
+            fopen.argtypes = ctypes.c_char_p, ctypes.c_char_p
+            fopen.restype = ctypes.c_void_p
 
-        fclose = libc.fclose
-        fclose.argtypes = ctypes.c_void_p,
-        fclose.restype = ctypes.c_int
+            fwrite = libc.fwrite
+            fwrite.argtypes = ctypes.c_void_p, ctypes.c_size_t, ctypes.c_size_t, ctypes.c_void_p
+            fwrite.restype = ctypes.c_size_t
 
-        fp = fopen('PythonBinOutput.raw', 'wb')
-        readoutstride = piint(0)
-        print "Getting readout stride. ", Picam_GetParameterIntegerValue(self.camera, ctypes.c_int(PicamParameter_ReadoutStride),
-                                                                     ctypes.byref(readoutstride))
-        print "readoutstride.value is",readoutstride.value
-        print 'fwrite returns: ', fwrite(data, readoutstride.value, 1, fp)
+            fclose = libc.fclose
+            fclose.argtypes = ctypes.c_void_p,
+            fclose.restype = ctypes.c_int
 
-        fclose(fp)
-        pass
+            fp = fopen('PythonBinOutput.raw', 'wb')
+            readoutstride = piint(0)
+            print "Getting readout stride. ", Picam_GetParameterIntegerValue(self.camera, ctypes.c_int(PicamParameter_ReadoutStride),
+                                                                         ctypes.byref(readoutstride))
+            print "readoutstride.value is",readoutstride.value
+            print 'fwrite returns: ', fwrite(data, readoutstride.value, 1, fp)
+
+            fclose(fp)
+            pass
 
     def get_camera_model(self):
         string = ctypes.c_char_p("              ")
@@ -215,6 +209,9 @@ class PICamera():
         pass
 
     def set_exposure_time(self, exposure_time):
+        # error = PicamError()
+        error = Picam_SetParameterFloatingPointValue(self.camera,PicamParameter_ExposureTime,exposure_time)
+        print "error is ",error
         pass
 
     def set_readout_mode(self, readout_mode):
@@ -250,9 +247,21 @@ class PICamera():
     def close_shutter(self):
         pass
 
+    def commit_param(self):
+        # error = PicamError()
+        committed = pibln()
+        error = Picam_AreParametersCommitted( self.camera,ctypes.byref(committed))
+        print "Picam_AreParametersCommitted exec res is",error
+        print "Picam_AreParametersCommitted val is",committed
+        failed_parameters_count = piint()
+        failed_parameters = Picamparameter()
+        Picam_CommitParameters()
+        pass
 
 if __name__ == "__main__":
     p = PICamera()
     p.init()
+    p.set_exposure_time(50)
+    p.commit_param()
     p.get_camera_model()
-    p.acquire_to_save()
+    # p.acquire_to_save()

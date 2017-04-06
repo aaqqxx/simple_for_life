@@ -289,7 +289,7 @@ if __name__ == '__main__':
     } PicamAvailableData;
     """
     readout_count = pi64s(3)
-    readout_time_out = piint(-1)
+    readout_time_out = piint(1)
     available = PicamAvailableData()
 
     """ Print Debug Information on initial readout """
@@ -311,6 +311,7 @@ if __name__ == '__main__':
         PicamAcquisitionErrorsMask)
     Picam_Acquire.restype = piint
 
+    # Picam_CanSetParameterFloatingPointValue(camera,)
     print '\nAcquiring... ', Picam_Acquire(camera, readout_count, readout_time_out, ctypes.byref(available),
                                            ctypes.byref(errors))
     print '\n'

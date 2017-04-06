@@ -13,14 +13,14 @@ import chardet
 
 
 def print_usage():
-    print '''usage:
+    print  '''usage:
 　　change_charset [file|directory] [charset] [output file]\n
 　　for example:
 　　  change 1.txt utf-8 n1.txt
 　　  change 1.txt utf-8
 　　  change . utf-8
 　　  change 1.txt
-'''
+            '''
 def get_charset(s):
     return chardet.detect(s)['encoding']
 

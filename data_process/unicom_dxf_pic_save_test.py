@@ -115,6 +115,6 @@ if __name__ == "__main__":
     # data=np.loadtxt("120_120_res.txt")
     # np.savetxt("60_60res.txt",data[:60,:60],fmt="%.3f",delimiter="\t")
     # sdxf_test1()
-    draw_rect_from_file(r"Unicom_AutoCAD.txt")
+    draw_rect_from_file(r"I:\Unicom_AutoCAD_25um2.txt")
     end_time = time.ctime()
     print end_time

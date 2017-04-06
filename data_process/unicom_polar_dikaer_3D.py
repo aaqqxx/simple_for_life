@@ -1,5 +1,5 @@
 # coding:utf-8
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 __author__ = 'XingHua'
 
@@ -72,11 +72,11 @@ qiangdu_value_dict = {1: [],
                               [249, 100], [249, 200], [249, 300], [249, 400], [333, 100], [333, 200], [333, 300],
                               [333, 400],
                               [415, 100], [415, 200], [415, 300], [415, 400]],
-}
+                      }
 
 
-def get_info(filename):
-    info = np.loadtxt(filename, delimiter="\t", dtype=float, skiprows=1)
+def get_info(filename, delimeter="\t"):
+    info = np.loadtxt(filename, delimiter=delimeter, dtype=float, skiprows=1)
     _min = info[:, 0]
     _max = info[:, 1]
     _value = info[:, 2]
@@ -143,12 +143,12 @@ def get_qiangdu_dict(filename="LocalCordi.txt"):
 
 # print "get qiangdu dict",sorted(get_qiangdu_dict().keys())
 
-def get_new_data(qiangdu, x_size=20, y_size=20):
+def get_new_data(qiangdu, x_size=20, y_size=20, file_name="LocalCordi_20150814.txt"):
     res = np.ones(x_size * y_size, dtype=np.bool)
     # if qiangdu==1:
     # # res[res.size/2]=0
     # return res.reshape(50,50)
-    qiangdu_dict = get_qiangdu_dict()
+    qiangdu_dict = get_qiangdu_dict(file_name)
     block_size = x_size * y_size
     for each in qiangdu_dict[qiangdu]:
         if each < block_size:
@@ -263,7 +263,7 @@ def get_sum_in_circle(data_2D, x_center=60, y_center=30, r=30, mm2index=20):
                 col_index_list.append(col_index)
 
     print "get_sum_in_circle"
-    #用来验证该圆是否正确
+    # 鐢ㄦ潵楠岃瘉璇ュ渾鏄惁姝ｇ‘
     # data_tmp = np.zeros(data_2D.size).reshape(data_2D.shape)
     # for row, col in zip(row_index_list, col_index_list):
     #     data_tmp[row][col] = 1
@@ -284,8 +284,8 @@ def get_sum_in_cols_with_circle_shape(data_2D, col_start_pos=60, r=30, step=1, m
     :param col_start_pos: mm
     :param r: mm
     :param step:mm
-    :param mm2index:mm转换为数组的index
-    :return: 某列处所有圆中所含1的和的列表
+    :param mm2index:mm杞崲涓烘暟缁勭殑index
+    :return: 鏌愬垪澶勬墍鏈夊渾涓墍鍚�1鐨勫拰鐨勫垪琛�
     """
     res = []
     # col_start_index = col_start_pos*mm2index
@@ -309,7 +309,7 @@ def get_sum_in_cols_with_circle_shape(data_2D, col_start_pos=60, r=30, step=1, m
 # for each in qiangdu_value_dict.keys():
 # for each in np.arange(1,0.92-0.004,-0.004):
 # print "each =", each
-# #浮点数的精度问题。。。
+# #娴偣鏁扮殑绮惧害闂銆傘�傘��
 # get_new_data(np.round(each*1000)/1000)
 
 # zzz = get_new_data(0.90,20,20)
@@ -318,8 +318,8 @@ def get_sum_in_cols_with_circle_shape(data_2D, col_start_pos=60, r=30, step=1, m
 # plt.imshow(get_new_data(0.90,20,20), cmap=plt.cm.gray, interpolation='nearest')
 # plt.show()
 #
-x_size = 120.
-y_size = 120.
+x_size = 100.
+y_size = 100.
 
 
 # fig = plt.Figure(120/25.4, 120/25.4, 25.4*20)
@@ -357,6 +357,7 @@ def out_put_photo(filename, data):
     print filename[:-4] + ".bmp"
     pass
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         filename = sys.argv[1]
@@ -364,7 +365,7 @@ if __name__ == "__main__":
     else:
         # filename = ur'./data/20141024/EDU_Ophir_NPulse_energy_data_20141024_4'
         # filename = ur'/home/aaqqxx/IL/server/data_analysis/data/20141024/ESS_energy_data20141024_PM7_bak'
-        filename = ur'data_info.txt'
+        filename = ur'data_info_small_20150817'
 
     x_start_pos = -x_size / 2
     x_end_pos = x_size / 2
@@ -380,7 +381,7 @@ if __name__ == "__main__":
 
     print "X.shape,Y.shape,Z.shape is ", X.shape, Y.shape, Z.shape
 
-    _min, _max, _value = get_info(filename)
+    _min, _max, _value = get_info(filename, delimeter=" ")
     # print _min, "\n", _max, "\n", _value
 
     data = get_z(X, Y, Z, _min, _max, _value)
@@ -402,7 +403,7 @@ if __name__ == "__main__":
 
     # np.savetxt("67_67_res.txt", Z, "%.3f", delimiter="\t")
     print "%d_%d_res.txt" % (X.shape[0], X.shape[1])
-    np.savetxt("%d_%d_res.txt" % (X.shape[0], X.shape[1]), Z, "%.4f", delimiter="\t")
+    np.savetxt("%s_%d_%d_res.txt" % (filename, X.shape[0], X.shape[1]), Z, "%.4f", delimiter="\t")
     # print "Z[34,34] IS", Z[34, 34]
 
     plt.plot(Z[:, Z.shape[1] / 2])
@@ -416,7 +417,7 @@ if __name__ == "__main__":
     plt.show()
 
     im = plt.imshow(Z, cmap=plt.cm.gray)
-    plt.title("%d*%d_2D" % (X.shape[0], X.shape[1]))
+    plt.title("%s_%d*%d_2D" % (filename, X.shape[0], X.shape[1]))
     plt.colorbar(im)
     plt.show()
 
@@ -424,10 +425,10 @@ if __name__ == "__main__":
     i = 0
     # print "begin 50*50 replace"
 
-    min_row_size = 20
-    min_col_size = 20
+    min_row_size = 100
+    min_col_size = 100
 
-    print "begin 20*20 replace"
+    print "begin %d*%d replace" % (min_row_size, min_row_size)
     # for data_array in Z:
     # for data in data_array:
     # tmp.append(get_new_data(data, min_row_size, min_col_size))
@@ -449,7 +450,7 @@ if __name__ == "__main__":
             col * min_col_size:col * min_col_size + min_col_size] = tmp[cnt]
             cnt = cnt + 1
     # print "50*50 replace over"
-    print "20*20 replace over"
+    print "%d*%d replace over" % (min_row_size, min_row_size)
 
     fig = plt.Figure(figsize=(120 / 25.4, 120 / 25.4), dpi=25.4 * 20)
     # fig = plt.Figure()
@@ -467,11 +468,10 @@ if __name__ == "__main__":
 
     out_put_photo("unicom_res.tif", a_res)
 
-
     index = []
 
-    index2mm = 0.05
-    mm2index = 20
+    index2mm = 0.01
+    mm2index = 100
     for row_index in xrange(0, X.shape[0] * min_row_size):
         for col_index in xrange(0, X.shape[1] * min_row_size):
             if a_res[row_index, col_index] == 0:
@@ -481,14 +481,14 @@ if __name__ == "__main__":
     index += index2mm / 2
     np.savetxt("unicom_center_v1.1.txt", index, fmt="%.3f", delimiter="\t")
 
-    for r in xrange(30, 50, 10):
-        # b_res = get_sum_at_col(a_res, col_start_index=67 * 50 / 2, width=50, height=50, step=step)
-        b_res = get_sum_in_cols_with_circle_shape(a_res, col_start_pos=a_res.shape[0] * index2mm / 2, r=r,
-                                                  step=1)
-        plt.plot(b_res / (np.pi * r ** 2 * 20 * 20))
-        plt.title("20*20 data sum in middle cols,step=" + str(1))
-        plt.savefig(str(1) + "step_size.tif")
-        plt.show()
+    # for r in xrange(30, 50, 10):
+    #     # b_res = get_sum_at_col(a_res, col_start_index=67 * 50 / 2, width=50, height=50, step=step)
+    #     b_res = get_sum_in_cols_with_circle_shape(a_res, col_start_pos=a_res.shape[0] * index2mm / 2, r=r,
+    #                                               step=1)
+    #     plt.plot(b_res / (np.pi * r ** 2 * 20 * 20))
+    #     plt.title("%d*%d data sum in middle cols,step="%(min_row_size,min_row_size) + str(1))
+    #     plt.savefig(str(1) + "step_size.tif")
+    #     plt.show()
 
     img = Image.open("res11.png")
     xxx = img.convert("1").tobitmap()

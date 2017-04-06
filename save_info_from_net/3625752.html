@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<title>通过python切换hosts文件 - 虫师 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=VDh8zSH1vx51MDqRT7hK220akQ58FjlaaeGuWBPhfOA1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/Minyx2_Lite/bundle-Minyx2_Lite.css?v=box8Dmmj5G0VFMZyypCbLIqNJsuu5lz6TpJ4OOK0WkE1"/>
+<link type="text/css" rel="stylesheet" href="/blog/customcss/91739.css?v=LfcVDbX80919KwJm7jT6CZkrcrc%3d"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/fnng/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/fnng/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/fnng/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'fnng', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=lWYisON4NCZPE0cDhRSZfCJYBtCYvhrzIJwgrI08A5U1" type="text/javascript"></script>
+<script src="/skins/Minyx2_Lite/bundle-Minyx2_Lite.js?v=dAK2Rw4GyogXqBvhMZEW0IkYD2kjtuL3y_BKRj-vp4g1" language="javascript" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+
+<div id="container">
+    <a class="minyx" href="http://www.cnblogs.com/">代码改变世界</a>
+    <ul id="topMnu">
+        <!-- 统计数据 -->
+        <li>
+            
+                
+Posts - 230, 
+Articles - 1, 
+Comments - 1534
+<!---->
+            
+        </li>
+        <!-- 这边可以增加一些链接 -->
+        <!-- 博客园 -->
+        <li><a href="http://www.cnblogs.com">Cnblogs</a></li>
+        <!-- 管理 -->
+        <li id="topMnu-dashboard">
+            <a id="lnkDashboard" href="http://www.cnblogs.com/fnng/admin/EditPosts.aspx">Dashboard</a></li>
+        <li>
+            <a id="lnkLogin" href="http://passport.cnblogs.com/login.aspx?ReturnUrl=http://www.cnblogs.com/fnng/p/3625752.html">Login</a></li>
+    </ul>
+
+    <script type="text/javascript">
+        var m = window.__blog.topMenuRendered;
+        if (m) { m(__$("topMnu")); }
+    </script>
+
+    <div id="header">
+        <ul id="menu">
+            <!-- 首页，当前section加上current类 -->
+            <li id="menu-home" class="current">
+                <a id="lnkHome" href="http://www.cnblogs.com/fnng/">Home</a></li>
+            <!-- 联系 -->
+            <li id="menu-contact">
+                <a id="lnkContact" href="http://space.cnblogs.com/msg/send/%e8%99%ab%e5%b8%88">Contact</a></li>
+            <!-- 相册 -->
+            <li id="menu-gallary">
+                <a id="lnkGallery" href="http://www.cnblogs.com/fnng/gallery.html">Gallery</a></li>
+            <!-- Rss订阅 -->
+            <li id="rss">
+                <a id="lnkRss" href="http://www.cnblogs.com/fnng/rss">RSS</a></li>
+        </ul>
+        <div id="newmsg"></div>
+        <h1>
+            <!-- 主标题 -->
+            <a id="lnkBlogTitle" href="http://www.cnblogs.com/fnng/">虫师</a>
+            <!-- 子标题 -->
+            <small>
+                大人不华，君子务实。
+独立博客：http://www.testpub.cn</small>
+        </h1>
+    </div>
+
+    <script type="text/javascript">
+        var m = window.__blog.headerRendered;
+        if (m) { m(__$("header")); }
+    </script>
+
+    <div id="wrapper">
+        <div id="content">
+            <script type="text/javascript">
+                var m = window.__blog.preRenderPosts;
+                if (m) { m(); }
+            </script>
+            
+<div id="post_detail">
+<div class="post" id="post">
+    <a name="top"></a>
+    <h2><a id="cb_post_title_url" href="http://www.cnblogs.com/fnng/p/3625752.html">通过python切换hosts文件</a></h2>
+    <small>2014-03-26 15:42 by 虫师, <span id="post_view_count">...</span> 阅读, <span id="post_comment_count">...</span> 评论, <a href="#" onclick="AddToWz(3625752);return false;">收藏</a>,  <a href ="http://i.cnblogs.com/EditPosts.aspx?postid=3625752" rel="nofollow">编辑</a></small>
+    <div class="entry">
+        <div id="cnblogs_post_body"><p class="p0">&nbsp;</p>
+<p class="p0"><span style="font-size: 15px;">　　做开发或测试时常需要切换<span style="font-family: 'Times New Roman';">hosts&nbsp;</span><span style="font-family: 宋体;">，如果</span><span style="font-family: 'Times New Roman';">hosts</span><span style="font-family: 宋体;">比较多，那么频繁的打开</span><span style="font-family: 'Times New Roman';">hosts</span><span style="font-family: 宋体;">文件对地址加注释（</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">），再把去掉注释是个繁琐的事情。</span></span></p>
+<p class="p0"><span style="font-size: 15px;">当然，<span style="font-family: 'Times New Roman';">SwitchHosts&nbsp;</span><span style="font-family: 宋体;">已经可以帮我们方便的解决了这个繁琐的事情。</span></span></p>
+<p class="p0"><span style="font-size: 15px;"><a href="https://github.com/oldj/SwitchHosts">https://github.com/oldj/SwitchHosts</a></span></p>
+<p class="p0"><span style="font-size: 15px;">　　但笔者还是自己尝试用<span style="font-family: 'Times New Roman';">python</span><span style="font-family: 宋体;">写个小程序来实现切换。以需求为驱动来解决日常的问题是件非常有意思的事。</span></span></p>
+<p class="p0"><span style="font-size: 15px;">&nbsp;</span></p>
+<p class="p0"><span style="font-size: 15px;">假如我们有一组<span style="font-family: 'Times New Roman';">hosts：</span></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">172.168.12.107    www.baidu.com
+172.168.10.213    account.baidu.com
+172.168.12.107    pan.baidu.com
+172.168.12.107    passport.baidu.com
+172.168.10.129    is.baidu.com
+172.168.12.107    un.baidu.com</span></pre>
+</div>
+<p class="p0">&nbsp;</p>
+<p class="p0"><span style="font-size: 15px;">写代码之前想清楚几点。</span></p>
+<p class="p0"><span style="font-size: 15px;">1<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">hosts&nbsp;</span><span style="font-family: 宋体;">文件一般放在我们的</span><span style="font-family: 'Times New Roman';">C:\WINDOWS\system32\drivers\etc\</span><span style="font-family: 宋体;">目录下，没有扩展名。我们可以通过记事本打开。</span><span style="font-family: 'Times New Roman';">python&nbsp;</span><span style="font-family: 宋体;">的</span><span style="font-family: 'Times New Roman';">os</span><span style="font-family: 宋体;">模块可以用于打开本地文件。</span></span></p>
+<p class="p0"><span style="font-size: 15px;">2<span style="font-family: 宋体;">、我们要做的操作也很简单，加注释（加</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号），去掉注释（去掉</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号）。去掉注释时，当我打开浏览器访问</span><span style="font-family: 'Times New Roman';">www.baidu.com&nbsp;</span><span style="font-family: 宋体;">时，其实访问的是本地的，</span>172.168.12.107&nbsp;<span style="font-family: 宋体;">主机。加上注释时，那么访问的就是真的百度服务器。</span></span></p>
+<p class="p0"><span style="font-size: 15px;">3<span style="font-family: 宋体;">、我们要做的操作是判断，每一行数据的第一个字符是否有</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号，没有的话就加上。</span></span></p>
+<p class="p0">&nbsp;</p>
+<p class="p0"><span style="font-size: 15px;">打开<span style="font-family: 'Times New Roman';">python&nbsp;shell&nbsp;</span><span style="font-family: 宋体;">练习加&ldquo;#&rdquo;</span><span style="font-family: 'Times New Roman';">号</span><span style="font-family: 宋体;">操作</span></span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; abc = <span style="color: #800000;">'</span><span style="color: #800000;">127.168.10.107 www.baidu.com</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt; a =<span style="color: #000000;"> abc[0]
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">if</span> a != <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    nabc </span>= <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span>+<span style="color: #000000;">abc
+    </span><span style="color: #0000ff;">print</span><span style="color: #000000;"> nabc
+
+    
+</span><span style="color: #008000;">#</span><span style="color: #008000;">127.168.10.107 www.baidu.com</span></pre>
+</div>
+<p class="p0"><span style="font-size: 15px;">　　定义<span style="font-family: 'Times New Roman';">abc</span><span style="font-family: 宋体;">字符串，</span><span style="font-family: 'Times New Roman';">abc[0]&nbsp;</span><span style="font-family: 宋体;">表示取字符串的第一个字符，判断是是否为</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号，如果不是，就把</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号加到</span><span style="font-family: 'Times New Roman';">abc</span><span style="font-family: 宋体;">字符串的前面。</span></span></p>
+<p class="p0"><span style="font-size: 15px;">添加注释的完整代码入下：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">coding=utf-8</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> add_jing():
+    input </span>= open(r<span style="color: #800000;">'</span><span style="color: #800000;">C:\WINDOWS\system32\drivers\etc\HOSTS</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    lines </span>=<span style="color: #000000;"> input.readlines()
+    input.close()
+
+    output </span>= open(r<span style="color: #800000;">'</span><span style="color: #800000;">C:\WINDOWS\system32\drivers\etc\HOSTS</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">w</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">for</span> line <span style="color: #0000ff;">in</span><span style="color: #000000;"> lines:
+        </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> line:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">
+        jing </span>=<span style="color: #000000;"> line[0]
+        </span><span style="color: #0000ff;">if</span> jing != <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">print</span><span style="color: #000000;"> line
+            nf </span>= <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span> +<span style="color: #000000;"> line
+            output.write(nf)
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            output.write(line)
+
+　　output.close()
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">"</span><span style="color: #800000;">__main__</span><span style="color: #800000;">"</span><span style="color: #000000;">:
+    add_jing()</span></pre>
+</div>
+<p class="p0"><span style="font-size: 15px;">　　程序先以读（<span style="font-family: 'Times New Roman';">r</span><span style="font-family: 宋体;">）的方式打开</span><span style="font-family: 'Times New Roman';">HOST</span><span style="font-family: 宋体;">文件，</span>readlines()&nbsp;<span style="font-family: 宋体;">方法逐行的读取内容。然后，</span><span style="font-family: 'Times New Roman';">close()</span><span style="font-family: 宋体;">关闭文件。</span></span></p>
+<p class="p0"><span style="font-size: 15px;">　　程序再以写（<span style="font-family: 'Times New Roman';">w</span><span style="font-family: 宋体;">）的方式打开</span><span style="font-family: 'Times New Roman';">HOST</span><span style="font-family: 宋体;">文件，对</span>readlines()&nbsp;<span style="font-family: 宋体;">获取的每一行数据判断是否有</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号，没有的话加上。并通过</span><span style="font-family: 'Times New Roman';">write()&nbsp;</span><span style="font-family: 宋体;">方法写入到</span>HOST文件中。最后<span style="font-family: 'Times New Roman';">close()</span><span style="font-family: 宋体;">关闭文件。</span></span></p>
+<p class="p0"><span style="font-size: 15px;">&nbsp;</span></p>
+<p class="p0"><span style="font-size: 15px;">&nbsp;</span></p>
+<p class="p0"><span style="font-size: 15px;">打开<span style="font-family: 'Times New Roman';">python&nbsp;shell&nbsp;</span><span style="font-family: 宋体;">练习&ldquo;#&rdquo;号</span><span style="font-family: 宋体;">操作：</span></span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; abc = <span style="color: #800000;">'</span><span style="color: #800000;">#127.168.10.107 www.baidu.com</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt; a =<span style="color: #000000;"> abc[0]
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">if</span> a == <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    nabc </span>= abc.replace(<span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span>,<span style="color: #800000;">''</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span><span style="color: #000000;"> nabc
+
+    
+</span>127.168.10.107 www.baidu.com</pre>
+</div>
+<p class="p0"><span style="font-size: 15px;">　　同样取字符串的第一个字符判断，如果是<span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号，那么通过</span><span style="font-family: 'Times New Roman';">replace()</span><span style="font-family: 宋体;">方法&nbsp;将</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">号替换成空</span><span style="font-family: 'Times New Roman';">(</span>&rsquo;&rsquo;)</span></p>
+<p class="p0"><span style="font-size: 15px;">去掉注释的完整代码：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> del_jing():
+    input </span>= open(r<span style="color: #800000;">'</span><span style="color: #800000;">C:\WINDOWS\system32\drivers\etc\HOSTS</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    lines </span>=<span style="color: #000000;"> input.readlines()
+    input.close()
+
+    output </span>= open(r<span style="color: #800000;">'</span><span style="color: #800000;">C:\WINDOWS\system32\drivers\etc\HOSTS</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">w</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">for</span> line <span style="color: #0000ff;">in</span><span style="color: #000000;"> lines:
+        </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> line:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">
+        jing </span>=<span style="color: #000000;"> line[0]
+        </span><span style="color: #0000ff;">if</span> jing == <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">print</span><span style="color: #000000;"> line
+            nf </span>= line.replace(<span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span>,<span style="color: #800000;">''</span><span style="color: #000000;">)
+            output.write(nf)
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            output.write(line)
+
+　　output.close()
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">"</span><span style="color: #800000;">__main__</span><span style="color: #800000;">"</span><span style="color: #000000;">:
+    del_jing()</span></pre>
+</div>
+<p class="p0">&nbsp;</p>
+<p class="p0">　<span style="font-size: 15px;">　通过运行add_jing()&nbsp;<span style="font-family: 宋体;">和</span><span style="font-family: 'Times New Roman';">del_jing()</span><span style="font-family: 宋体;">两个函数的方式并不灵活。这里只是通过修改</span><span style="font-family: 'Times New Roman';">#</span><span style="font-family: 宋体;">的方式来切换</span><span style="font-family: 'Times New Roman';">hosts&nbsp;</span><span style="font-family: 宋体;">，那么你也可以将</span><span style="font-family: 'Times New Roman';">hosts</span><span style="font-family: 宋体;">定义一个数组，</span><span style="font-family: 宋体;">直接写入到<span>HOST</span><span>文件</span>。通过</span></span></p>
+<p class="p0"><span style="font-size: 15px;">写入不同的数组来达到切换不同<span style="font-family: 'Times New Roman';">hosts</span><span style="font-family: 宋体;">的目的。</span></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">coding=utf-8</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+
+</span><span style="color: #800000;">'''</span><span style="color: #800000;">内网测试环境</span><span style="color: #800000;">'''</span><span style="color: #000000;">
+insides </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">172.168.12.107 www.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+          </span><span style="color: #800000;">'</span><span style="color: #800000;">172.168.10.129 pan.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+          </span><span style="color: #800000;">'</span><span style="color: #800000;">172.168.12.107 un.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+          </span><span style="color: #800000;">'</span><span style="color: #800000;">172.168.12.107 passport.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+
+</span><span style="color: #800000;">'''</span><span style="color: #800000;">外网测试环境</span><span style="color: #800000;">'''</span><span style="color: #000000;">
+outsides </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">172.16.12.223 www.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+            </span><span style="color: #800000;">'</span><span style="color: #800000;">172.16.10.223 pan.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+            </span><span style="color: #800000;">'</span><span style="color: #800000;">172.16.12.111 un.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+            </span><span style="color: #800000;">'</span><span style="color: #800000;">172.16.12.223 passport.baidu.com</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> inside_test():
+    output </span>= open(r<span style="color: #800000;">'</span><span style="color: #800000;">C:\pyse\HOSTS.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">w</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">for</span> insid <span style="color: #0000ff;">in</span><span style="color: #000000;"> insides:
+        </span><span style="color: #0000ff;">print</span><span style="color: #000000;"> insid
+        output.write(insid)
+        output.write(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+    output.close()
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> outside_test():
+    output </span>= open(r<span style="color: #800000;">'</span><span style="color: #800000;">C:\pyse\HOSTS.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">w</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">for</span> outsid <span style="color: #0000ff;">in</span><span style="color: #000000;"> outsides:
+        </span><span style="color: #0000ff;">print</span><span style="color: #000000;"> outsid
+        output.write(outsid)
+        output.write(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+    output.close()    
+
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">"</span><span style="color: #800000;">__main__</span><span style="color: #800000;">"</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">#</span><span style="color: #008000;">inside_test()</span>
+    outside_test()</pre>
+</div>
+<p class="p0"><span style="font-size: 15px;">　　上面的方式会更加简单，把定义的host数组写到<span style="font-family: 'Times New Roman';">HOST</span><span style="font-family: 宋体;">文件中，注意：每写一个数组元素需要加一个回车换行</span><span style="font-family: 'Times New Roman';">---write("\n")</span></span></p>
+<p class="p0"><span style="font-size: 15px;">&nbsp;</span></p>
+<p class="p0"><span style="font-size: 15px;">　　如果想继续增加切换<span style="font-family: 'Times New Roman';">host</span><span style="font-family: 宋体;">的便捷性，可以使用</span>wxPython写一个<span style="font-family: 'Times New Roman';">host</span><span style="font-family: 宋体;">的配置界面出来，那么也就是我们的</span><span style="font-family: 'Times New Roman';">SwitchHosts&nbsp;</span><span style="font-family: 宋体;">工具了。</span></span></p>
+<p class="p0">&nbsp;</p>
+<p class="p0">&nbsp;</p>
+<p class="p0">&nbsp;</p>
+<p class="p0">&nbsp;</p>
+<p class="p0">&nbsp;</p></div><div id="MySignature"></div>
+        <div class="clear"></div>
+        <div id="blog_post_info_block">
+        <div id="blog_post_info">
+        </div>
+        <div class="clear"></div>
+        <div id="post_next_prev"></div>
+    </div>
+</div>
+    <ul class="postmetadata">
+        <li class="icon_cat" id="BlogPostCategory"></li>
+        <li class="icon_bullet" id="EntryTag"></li>
+    </ul>
+</div>
+<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=91739,cb_entryId=3625752,cb_blogApp=currentBlogApp,cb_blogUserGuid='f93e222f-6da1-e011-a53f-842b2b196315',cb_entryCreatedDate='2014/3/26 15:42:00';loadViewCount(cb_entryId);</script>
+<script type="text/javascript">
+    var m = window.__blog.postRendered;
+    if (m) { m(__$("post")); }
+</script>
+<script type="text/javascript">
+    var m = window.__blog.postRenderPosts;
+    if (m) { m(); }
+</script>
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" id="lnk_RefreshComments" onclick="return RefreshCommentList();">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+<div id="comment_form_container"></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="site_nav_under"><a href="http://www.cnblogs.com/" target="_blank" title="开发者的网上家园">博客园首页</a><a href="http://q.cnblogs.com/" target="_blank" title="程序员问答社区">博问</a><a href="http://news.cnblogs.com/" target="_blank" title="IT新闻">新闻</a><a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a><a href="http://job.cnblogs.com/" target="_blank">程序员招聘</a><a href="http://kb.cnblogs.com/" target="_blank">知识库</a></div>
+<div id="opt_under_post"></div>
+<script type="text/javascript">
+    var enableGoogleAd = canShowAdsense(); 
+    fixPostBodyFormat();
+</script>
+<script type='text/javascript'>
+  var googletag = googletag || {};
+  googletag.cmd = googletag.cmd || [];
+    (function () {
+        if (enableGoogleAd) {
+            var gads = document.createElement('script');
+            gads.async = true;
+            gads.type = 'text/javascript';
+            var useSSL = 'https:' == document.location.protocol;
+            gads.src = (useSSL ? 'https:' : 'http:') +
+              '//www.googletagservices.com/tag/js/gpt.js';
+            var node = document.getElementsByTagName('script')[0];
+            node.parentNode.insertBefore(gads, node);
+        }
+  })();
+</script>
+<script type='text/javascript'>
+    try {
+        if (enableGoogleAd) {
+            googletag.cmd.push(function() {
+            googletag.defineSlot('/1090369/cnblogs_blogpost_C2', [468, 60], 'div-gpt-ad-1433581717989-0').addService(googletag.pubads());
+            googletag.defineSlot('/1090369/cnblogs_blogpost_C1_sitehome', [300, 250], 'div-gpt-ad-1433581717989-1').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.pubads().collapseEmptyDivs();
+            googletag.enableServices();
+            });
+        };
+    } catch (e) { }
+</script>
+<div id="google_ad_c1" class="c_ad_block">
+    <div id='div-gpt-ad-1433581717989-1' style='height:250px; width:300px;'>
+    <script type='text/javascript'>
+        try {
+            if (enableGoogleAd) {
+                googletag.cmd.push(function () { googletag.display('div-gpt-ad-1433581717989-1'); });
+            } else {
+                $('#div-gpt-ad-1433581717989-1').hide();
+            }
+    } catch (e) { }
+    </script>
+    </div>
+</div>
+<div id="under_post_news"></div>
+<div id="google_ad_c2" class="c_ad_block">
+<div id='div-gpt-ad-1433581717989-0' style='height:60px; width:468px;'>
+<script type='text/javascript'>
+try {
+    if (enableGoogleAd) {
+        googletag.cmd.push(function () { googletag.display('div-gpt-ad-1433581717989-0'); });
+    } else {
+        $('#div-gpt-ad-1433581717989-0').hide();
+    }
+} catch (e) { }
+</script>
+</div>
+</div>
+<div id="under_post_kb"></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+$(function () {
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 200);
+});
+</script>
+</div>
+
+        </div>
+
+        <script type="text/javascript">
+            var m = window.__blog.contentRendered;
+            if (m) { m(__$("content")); }
+        </script>
+
+        <div id="sidebar">
+            
+<div id="about">
+<div>
+<h2 id="about_title">About</h2>
+<div id="about_body">
+<div id="blog-news"></div>
+<script type="text/javascript">loadBlogNews();</script>
+</div>
+</div>
+</div>
+
+            <script type="text/javascript">
+                var m = window.__blog.aboutRendered;
+                if (m) { m(__$("about")); }
+            </script>
+            
+<div id="mySearchWrapper">
+    <div id="mySearch">
+        <input type="image" src="/skins/Minyx2_Lite/images/btnsearch.gif" id="btnZzk"  class="submit" onclick="zzk_go();return false;"/>
+        <label class="lb_search"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="keyword" /></label>
+    </div>
+</div>
+
+            <script type="text/javascript">
+                var m = window.__blog.searchFormRendered;
+                if (m) { m(__$("searchform")); }
+            </script>
+            <div id="sideMain">
+            </div>
+            <div id="sideRight">
+            </div>
+            <div id="sideLeft">
+            </div>
+            
+                <div id="sideContainer">
+                </div>
+                <script type="text/javascript">
+                    $.ajax({
+                        url: '/' + currentBlogApp + '/mvc/blog/Minyx2_Lite_SideColumn.aspx',
+                        data: '{}',
+                        type: 'post',
+                        dataType: 'text',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data) {
+                                $("#sideContainer").html(data);
+                                loadBlogDefaultCalendar();
+                                loadBlogSideBlocks();
+                                var m = window.__blog.sideContainerRendered;
+                                if (m) { m(__$("sideContainer")); }
+                                window.__blog.sidebar.__layout();
+                            }
+                        }
+                    });
+
+                </script>
+            
+        </div>
+
+        <script type="text/javascript">
+            var m = window.__blog.sidebarRendered;
+            if (m) { m(__$("sidebar")); }
+        </script>
+
+        <div id="footer">
+            
+<p id="logoFoot">
+    <a href="http://www.spiga.com.mx/" title="Agencia Interactiva Spiga">www.spiga.com.mx</a>
+</p>
+<div class="footText">
+<p>
+Copyright &copy;2015 虫师
+</p>
+<p>
+<a href="http://www.cnblogs.com">博客园</a>
+</p>
+</div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var m = window.__blog.wrapperRendered;
+        if (m) { m(__$("wrapper")); }
+    </script>
+
+</div>
+<script type="text/javascript">
+    var m = window.__blog.containerRendered;
+    if (m) { m(__$("container")); }
+</script>
+<!--PageEndHtml Block Begin-->
+<script src="http://s13.cnzz.com/stat.php?id=3347352&web_id=3347352&show=pic2" language="JavaScript">
+</script>
+<div align="center"><a href="http://www.amazingcounters.com"><img border="0" src="http://cc.amazingcounters.com/counter.php?i=3064217&c=9192964" alt="Web Page Counters"></a><br><a href="http://www.coupons-coupon-codes.com/staples/">Computer Desks</a></div>
+
+
+<!--评论，生成气泡效果标签代码-->
+  <script type="text/javascript" language="javascript"> 
+      $(document).ready(function() {
+          var commentTime = setInterval(function(){if($("#comments_pager_bottom").length>0){CommentBubble();clearTimeout(commentTime);}},50);
+      }); 
+      function CommentBubble()
+      {
+  var w1 = '<div class="list">' +
+          '<table class="out" border="0" cellspacing="0" cellpadding="0"> ' +
+             '<tr>' +
+                 '<td class="icontd" align="right" valign="bottom">' +
+                     '<img src="" width="70px" height="57px"/>' +
+                 '</td>' +
+                 '<td align="left" valign="bottom" class="q">' +
+                     '<table border="0" cellpadding="0" cellspacing="0" style=""> ' +
+                         '<tr><td class="topleft"></td><td class="top"></td><td class="topright"></td></tr> ' +
+                         '<tr><td class="left"></td> <td align="left" class="conmts"><p>';
+  
+  
+         var w2 = '</p> </td> <td class="right"></td></tr> ' +
+                         '<tr><td class="bottomleft"></td><td class="bottom"></td><td class="bottomright"></td></tr> ' +
+                     '</table>' +
+                 '</td> ' +
+             '</tr> ' +
+         '</table> ' +
+     '</div>';
+  
+         $.each($(".blog_comment_body"), function(i, t) {
+             $(t).html(w1 + $(t).html() + w2);
+         });
+ $(".louzhu").closest(".feedbackItem").find(".out").removeClass("out").addClass("inc");
+         /*.find(".q").attr("align","right");*/
+         }
+ </script>
+<!--PageEndHtml Block End-->
+</body>
+</html>

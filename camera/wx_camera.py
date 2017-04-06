@@ -23,19 +23,22 @@ Bus 001 Device 001: ID 0000:0000
 """
 
 import wx
-from cv2.cv import *
-from cv2.highgui import *
+# from cv2 import *
+import cv2
+# from cv2.highgui import *
 
 class MyFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, -1, 'camera')
         self.SetClientSize((640, 480))
 
-        self.cap = CreateCameraCapture(0)
+        # self.cap = CreateCameraCapture(0)
+        self.cap = cv2.VideoCapture(0)
         self.Bind(wx.EVT_IDLE, self.onIdle)
 
     def onIdle(self, event):
-        img = QueryFrame(self.cap)
+        # img = QueryFrame(self.cap)
+        result,img = self.cap.read()
         self.displayImage(img)
         event.RequestMore()
 
