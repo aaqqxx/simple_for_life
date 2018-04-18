@@ -12,7 +12,7 @@ import os
 import re
 import sys
 
-path=
+path=""
 
 def find_the_file(path=os.getcwd(),pattern="*"):
     file_names_reg=os.listdir(path)
@@ -36,6 +36,6 @@ def find_and_rename_files(path,pattern,new_suffix):
 if __name__=="__main__":
     if len(sys.argv)!=0:
         res=find_the_file(sys.argv[1],'f_\w\w\w\w\w\w')
-    res=find_the_file(path=r'C:\Documents and Settings\SIOM\Local Settings\Application Data\Google\Chrome\User Data\Profile 1\Cache','f_\w\w\w\w\w\w')
+    res=find_the_file(path=r'C:\Documents and Settings\SIOM\Local Settings\Application Data\Google\Chrome\User Data\Profile 1\Cache',pattern=r'f_\w\w\w\w\w\w')
     for each in res:
        print each
