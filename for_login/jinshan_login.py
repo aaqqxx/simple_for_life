@@ -21,9 +21,12 @@ class Login_kp:
         self.opener.addheaders = [('User-agent', 'IE')]
 
     def login(self, username, password):
-        url = 'https://www.kuaipan.cn/index.php?ac=account&op=login'
-        data = urllib.urlencode({'username': username, 'userpwd': password})
+        url = 'http://1.1.1.2/ac_portal/default/pc.html?tabs=pwd'
+        # data = urllib.urlencode({'username': username, 'userpwd': password})
+        data = urllib.urlencode({'password_name': username, 'password_pwd': password})
+        print data
         req = urllib2.Request(url, data)
+        print req.headers
         try:
             fd = self.opener.open(req)
         except Exception, e:
@@ -58,6 +61,6 @@ class Login_kp:
 
 if __name__ == '__main__':
     l = Login_kp()
-    if l.login('your email', 'your password') == False:
+    if l.login('maxinghua', 'abcd1234') == False:
         exit(1)
     l.sign()

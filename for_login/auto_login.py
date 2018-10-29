@@ -56,6 +56,6 @@ class Login_e10000:
 
 
 if __name__ == '__main__':
-    user = Login_e10000('aaqqxx1910', '53yFlTPK')
+    user = Login_e10000('maxinghua', 'abcd1234')
     user.login()
     user.signIn()
